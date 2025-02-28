@@ -9,8 +9,9 @@ app.use(cors());
 app.use(express.json());
 
 // app.get("/", (req, res) => {
-//   res.send("<h1>Hello backend</h1>");
+//   res.send("<h1>Hello backend</h1>[");
 // });
+
 app.use("/api", userRoutes);
 
 app.listen(port, () => {
