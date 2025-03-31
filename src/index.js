@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import userRoutes from "./routes/userRoute.js";
+import clientRoutes from "./routes/clientRoute.js";
 
 const app = express();
 const port = 3000;
@@ -12,7 +12,7 @@ app.use(express.json());
 //   res.send("<h1>Hello backend</h1>[");
 // });
 
-app.use("/api", userRoutes);
+app.use("/api", clientRoutes);
 
 app.listen(port, () => {
   console.log("Listening on port 3000");
