@@ -33,3 +33,33 @@ export const createClient = async (clientData) => {
 
   return rows[0];
 };
+
+export const updateClient = async (clientId, clientData) => {
+  const {
+    a_fname,
+    a_lname,
+    a_email,
+    a_password,
+    a_address,
+    a_contactnum,
+    a_department,
+    a_status,
+  } = clientData;
+
+  const { rows } = await query(
+    `UPDATE admin_tbl SET a_fname = $1, a_lname = $2, a_email = $3, a_password = $4, a_address = $5, a_contactnum = $6, a_department = $7, a_status = $8 WHERE a_id = $9 RETURNING *`,
+    [
+      a_fname,
+      a_lname,
+      a_email,
+      a_password,
+      a_address,
+      a_contactnum,
+      a_department,
+      a_status,
+      clientId,
+    ]
+  );
+
+  return rows[0];
+};
