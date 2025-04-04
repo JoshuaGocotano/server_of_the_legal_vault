@@ -1,5 +1,6 @@
 import * as clientService from "../services/clientServices.js";
 
+// Fetching All Clients
 export const getClients = async (req, res) => {
   try {
     const client = await clientService.getClients();
@@ -37,6 +38,21 @@ export const updateClient = async (req, res) => {
     res.status(200).json(updatedClient);
   } catch (err) {
     console.error("Error updating client", err);
+    res.status(500).json({ message: "Internal Sever Error" });
+  }
+};
+
+// Delete client or admin from the database
+export const deleteClient = async (req, res) => {
+  try {
+    const clientId = req.params.a_id;
+    const deletedClient = await clientService.deleteClient(clientId);
+    if (!deletedClient) {
+      return res.status(404).json({ message: "Client not found" });
+    }
+    res.status(200).send("Client deleted successfully");
+  } catch (err) {
+    console.error("Error deleting client", err);
     res.status(500).json({ message: "Internal Sever Error" });
   }
 };

@@ -1,10 +1,12 @@
 import { query } from "../db.js";
 
+// Fetching All Clients
 export const getClients = async () => {
   const { rows } = await query("SELECT * FROM admin_tbl");
   return rows;
 };
 
+// Adding a New Client
 export const createClient = async (clientData) => {
   const {
     a_fname,
@@ -34,6 +36,7 @@ export const createClient = async (clientData) => {
   return rows[0];
 };
 
+// Updating Client Information
 export const updateClient = async (clientId, clientData) => {
   const {
     a_fname,
@@ -59,6 +62,16 @@ export const updateClient = async (clientId, clientData) => {
       a_status,
       clientId,
     ]
+  );
+
+  return rows[0];
+};
+
+// Deleting a Client
+export const deleteClient = async (clientId) => {
+  const { rows } = await query(
+    "DELETE FROM admin_tbl WHERE a_id = $1 RETURNING *",
+    [clientId]
   );
 
   return rows[0];
