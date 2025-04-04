@@ -56,3 +56,15 @@ export const deleteClient = async (req, res) => {
     res.status(500).json({ message: "Internal Sever Error" });
   }
 };
+
+// Search for clients or admins
+export const searchClients = async (req, res) => {
+  try {
+    const searchQuery = req.query.q;
+    const clients = await clientService.searchClients(searchQuery);
+    res.status(200).json(clients);
+  } catch (err) {
+    console.error("Error searching clients", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

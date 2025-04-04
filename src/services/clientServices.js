@@ -76,3 +76,13 @@ export const deleteClient = async (clientId) => {
 
   return rows[0];
 };
+
+// Searching for Clients or Admins
+export const searchClients = async (searchTerm) => {
+  const { rows } = await query(
+    "SELECT * FROM admin_tbl WHERE a_fname ILIKE $1 OR a_lname ILIKE $1 OR a_email ILIKE $1",
+    [`%${searchTerm}%`]
+  );
+
+  return rows;
+};
