@@ -80,7 +80,7 @@ export const deleteClient = async (clientId) => {
 // Searching for Clients or Admins
 export const searchClients = async (searchTerm) => {
   const { rows } = await query(
-    "SELECT * FROM admin_tbl WHERE a_fname ILIKE $1 OR a_lname ILIKE $1 OR a_email ILIKE $1",
+    "SELECT * FROM admin_tbl WHERE a_fname ILIKE $1 OR a_lname ILIKE $1 OR a_email ILIKE $1 or a_address ILIKE $1 OR a_contactnum ILIKE $1 OR a_department ILIKE $1",
     [`%${searchTerm}%`]
   );
 
