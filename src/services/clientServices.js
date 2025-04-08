@@ -2,7 +2,7 @@ import { query } from "../db.js";
 
 // Fetching All Clients
 export const getClients = async () => {
-  const { rows } = await query("SELECT * FROM admin_tbl");
+  const { rows } = await query("SELECT * FROM admin_tbl ORDER BY a_id ASC");
   return rows;
 };
 
