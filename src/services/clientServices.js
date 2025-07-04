@@ -1,3 +1,5 @@
+// ----------------  SERVICES or QUERIES
+
 import { query } from "../db.js";
 
 // Fetching All Clients
