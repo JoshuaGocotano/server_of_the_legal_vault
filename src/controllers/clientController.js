@@ -7,7 +7,7 @@ export const getClients = async (req, res) => {
     res.status(200).json(client);
   } catch (err) {
     console.error("Error fetching clients", err);
-    res.status(500).json({ message: "Internal Sever Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -19,7 +19,7 @@ export const createClient = async (req, res) => {
     res.status(200).json(newClient);
   } catch (err) {
     console.error("Error adding clients", err);
-    res.status(500).json({ message: "Internal Sever Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -38,7 +38,7 @@ export const updateClient = async (req, res) => {
     res.status(200).json(updatedClient);
   } catch (err) {
     console.error("Error updating client", err);
-    res.status(500).json({ message: "Internal Sever Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -53,7 +53,7 @@ export const deleteClient = async (req, res) => {
     res.status(200).send("Client deleted successfully");
   } catch (err) {
     console.error("Error deleting client", err);
-    res.status(500).json({ message: "Internal Sever Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
