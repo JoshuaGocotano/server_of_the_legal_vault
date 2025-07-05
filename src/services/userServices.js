@@ -35,7 +35,7 @@ export const createUser = async (userData) => {
   const { rows } = await query(
     `INSERT INTO user_tbl (
       user_email, user_password, user_fname, user_mname, 
-      user_lname, user_phonenum, user_role, created_by, branch_id
+      user_lname, user_phonenum, user_role, user_status, created_by, branch_id
     ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
     [
       user_email,
