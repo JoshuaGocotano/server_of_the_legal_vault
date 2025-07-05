@@ -26,7 +26,7 @@ export const createUser = async (userData) => {
     branch_id,
   } = userData;
 
-  // Hash password securely
+  // Hashing here
   const hashedPassword = await bcrypt.hash(
     user_password.toString(),
     saltRounds

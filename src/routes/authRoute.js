@@ -1,6 +1,8 @@
 import express from "express";
 import { query } from "../db.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import verifyUser from "../middleware/verifyUser.js";
 
 const router = express.Router();
 
@@ -14,23 +16,44 @@ router.post("/login", async (req, res) => {
     );
     const user = rows[0];
 
-    if (!user) {
-      return res.status(401).json({ error: "User not found" });
-    }
+    if (!user) return res.status(401).json({ error: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.user_password);
-    if (!isMatch) {
-      return res.status(401).json({ error: "Incorrect password" });
-    }
+    if (!isMatch) return res.status(401).json({ error: "Incorrect password" });
 
-    // Remove password before sending back
+    const token = jwt.sign(
+      {
+        user_id: user.user_id,
+        role: user.user_role,
+        name: user.user_fname,
+        email: user.user_email,
+      },
+      "jwt-secret-key",
+      { expiresIn: "1d" }
+    );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
     delete user.user_password;
-
     res.json({ user });
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
+});
+
+// ✅ Session Check Route
+router.get("/verify", verifyUser, (req, res) => {
+  res.json({
+    status: "success",
+    message: "User is authenticated",
+    user: req.user, // contains user_id, name, role, etc.
+  });
 });
 
 export default router;
