@@ -24,9 +24,10 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       {
         user_id: user.user_id,
-        role: user.user_role,
-        name: user.user_fname,
-        email: user.user_email,
+        user_email: user.user_email,
+        user_fname: user.user_fname,
+        user_lname: user.user_lname,
+        user_role: user.user_role,
       },
       "jwt-secret-key",
       { expiresIn: "1d" }
@@ -54,6 +55,17 @@ router.get("/verify", verifyUser, (req, res) => {
     message: "User is authenticated",
     user: req.user, // contains user_id, name, role, etc.
   });
+});
+
+// For logging out
+router.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "Lax",
+  });
+
+  return res.json({ message: "Logged out successfully" });
 });
 
 export default router;
