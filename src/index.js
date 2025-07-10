@@ -22,7 +22,7 @@ app.use(
 
 app.use("/api", branchRoutes);
 app.use("/api", userRoutes);
-app.use("/api", authRoutes);
+app.use("/api", authRoutes); // authentication api
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
