@@ -22,6 +22,7 @@ export const createUser = async (userData) => {
     user_phonenum,
     user_role,
     user_status,
+    user_profile,
     created_by,
     branch_id,
   } = userData;
@@ -35,8 +36,8 @@ export const createUser = async (userData) => {
   const { rows } = await query(
     `INSERT INTO user_tbl (
       user_email, user_password, user_fname, user_mname, 
-      user_lname, user_phonenum, user_role, user_status, created_by, branch_id
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+      user_lname, user_phonenum, user_role, user_status, user_profile, created_by, branch_id
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
     [
       user_email,
       hashedPassword,
@@ -46,6 +47,7 @@ export const createUser = async (userData) => {
       user_phonenum,
       user_role,
       user_status,
+      user_profile,
       created_by,
       branch_id,
     ]
@@ -65,6 +67,7 @@ export const updateUser = async (userId, userData) => {
     user_phonenum,
     user_role,
     user_status,
+    user_profile,
     branch_id,
   } = userData;
 
@@ -83,8 +86,9 @@ export const updateUser = async (userId, userData) => {
       user_phonenum = $6,
       user_role = $7,
       user_status = $8,
-      branch_id = $9
-    WHERE user_id = $10
+      user_profile = $9,
+      branch_id = $10
+    WHERE user_id = $11
     RETURNING *`,
     [
       user_email,
@@ -95,6 +99,7 @@ export const updateUser = async (userId, userData) => {
       user_phonenum,
       user_role,
       user_status,
+      user_profile,
       branch_id,
       userId,
     ]
