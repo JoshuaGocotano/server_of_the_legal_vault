@@ -5,6 +5,14 @@ import bcrypt from "bcrypt";
 
 const saltRounds = 10;
 
+// Fetching a specific user by ID
+export const getUserById = async (userId) => {
+  const { rows } = await query("SELECT * FROM user_tbl WHERE user_id = $1", [
+    userId,
+  ]);
+  return rows[0];
+};
+
 // Fetching All Users from the user_tbl
 export const getUsers = async () => {
   const { rows } = await query("SELECT * FROM user_tbl ORDER BY user_id ASC");

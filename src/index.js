@@ -23,7 +23,7 @@ app.use(
 app.use("/api", branchRoutes);
 app.use("/api", userRoutes);
 app.use("/api", authRoutes); // authentication api
-app.use("/uploads", express.static("D:/Capstone_ni_Angelie/uploads")); // for user profiles
+app.use("/uploads", express.static("D:/Capstone_ni_Angelie/uploads")); // user profile uploads 
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
