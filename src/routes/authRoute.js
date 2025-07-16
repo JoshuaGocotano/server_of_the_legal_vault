@@ -28,8 +28,11 @@ router.post("/login", async (req, res) => {
         user_fname: user.user_fname,
         user_mname: user.user_mname,
         user_lname: user.user_lname,
+        user_phonenum: user.user_phonenum,
         user_role: user.user_role,
+        user_status: user.user_status,
         user_profile: user.user_profile,
+        branch_id: user.branch_id,
       },
       "jwt-secret-key",
       { expiresIn: "1d" }
