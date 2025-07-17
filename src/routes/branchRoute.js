@@ -6,6 +6,6 @@ import requireAdmin from "../middleware/requireAdmin.js";
 
 const router = express.Router();
 
-router.get("/branches", verifyUser, requireAdmin, branchController.getBranches);
+router.get("/branches", branchController.getBranches);
 
 export default router;
