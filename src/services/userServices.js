@@ -1,8 +1,8 @@
 // ----------------  SERVICES or QUERIES
 
 import { query } from "../db.js";
-import bcrypt from "bcrypt";
 
+import bcrypt from "bcrypt";
 const saltRounds = 10;
 
 // Fetching a specific user by ID
