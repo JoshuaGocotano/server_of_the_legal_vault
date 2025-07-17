@@ -66,7 +66,7 @@ export const createUser = async (userData) => {
 
 // Updating User Information
 export const updateUser = async (userId, userData) => {
-  const {
+  let {
     user_email,
     user_password,
     user_fname,
@@ -82,6 +82,20 @@ export const updateUser = async (userId, userData) => {
   let hashedPassword = null;
   if (user_password) {
     hashedPassword = await bcrypt.hash(user_password.toString(), saltRounds);
+  } else {
+    const { rows } = await query(
+      "SELECT user_password FROM user_tbl WHERE user_id = $1",
+      [userId]
+    );
+    hashedPassword = rows[0]?.user_password;
+  }
+
+  if (!user_profile) {
+    const { rows } = await query(
+      "SELECT user_profile FROM user_tbl WHERE user_id = $1",
+      [userId]
+    );
+    user_profile = rows[0]?.user_profile;
   }
 
   const { rows } = await query(

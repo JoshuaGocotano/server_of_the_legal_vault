@@ -50,8 +50,8 @@ router.post(
 );
 router.put(
   "/users/:user_id",
-  verifyUser,
-  requireAdmin,
+  // verifyUser,
+  // requireAdmin,
   upload.single("user_profile"),
   userController.updateUser
 );
