@@ -24,15 +24,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       {
         user_id: user.user_id,
-        user_email: user.user_email,
-        user_fname: user.user_fname,
-        user_mname: user.user_mname,
-        user_lname: user.user_lname,
-        user_phonenum: user.user_phonenum,
         user_role: user.user_role,
-        user_status: user.user_status,
-        user_profile: user.user_profile,
-        branch_id: user.branch_id,
       },
       "jwt-secret-key",
       { expiresIn: "1d" }
@@ -54,12 +46,27 @@ router.post("/login", async (req, res) => {
 });
 
 // ✅ Session Check Route
-router.get("/verify", verifyUser, (req, res) => {
-  res.json({
-    status: "success",
-    message: "User is authenticated",
-    user: req.user, // contains user_id, name, role, etc.
-  });
+router.get("/verify", verifyUser, async (req, res) => {
+  try {
+    const { rows } = await query("SELECT * FROM user_tbl WHERE user_id = $1", [
+      req.user.user_id,
+    ]);
+    const user = rows[0];
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    delete user.user_password;
+
+    res.json({
+      status: "success",
+      user,
+    });
+  } catch (err) {
+    console.error("Verify error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // For logging out
