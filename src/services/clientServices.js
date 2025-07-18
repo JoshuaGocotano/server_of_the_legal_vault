@@ -10,3 +10,10 @@ export const getClientById = async (clientId) => {
   );
   return rows[0];
 };
+
+//Fetching all clients
+export const getClients = async () => {
+  const { rows } = await query("SELECT * FROM client_tbl ORDER BY client_id ASC");
+  return rows;
+};
+

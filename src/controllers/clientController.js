@@ -16,3 +16,15 @@ export const getClientById = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+//Fetching all clients
+export const getClients = async (req, res) => {
+  try {
+    const client = await clientService.getClients();
+    res.status(200).json(client);
+  } catch (err) {
+    console.error("Error fetching clients", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
