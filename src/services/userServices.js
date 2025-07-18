@@ -54,7 +54,7 @@ export const createUser = async (userData) => {
       user_lname,
       user_phonenum,
       user_role,
-      user_status,
+      "Active",
       user_profile,
       created_by,
       branch_id,
