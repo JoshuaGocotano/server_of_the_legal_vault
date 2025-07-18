@@ -6,5 +6,7 @@ const router = express.Router();
 
 // Routes
 router.get("/clients/:client_id", clientController.getClientById);
+router.get("/clients", clientController.getClients);
+
 
 export default router;
