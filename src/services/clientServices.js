@@ -11,9 +11,18 @@ export const getClientById = async (clientId) => {
   return rows[0];
 };
 
-//Fetching all clients
+// Fetching all clients
 export const getClients = async () => {
-  const { rows } = await query("SELECT * FROM client_tbl ORDER BY client_id ASC");
+  const { rows } = await query(
+    "SELECT * FROM client_tbl ORDER BY client_id ASC"
+  );
   return rows;
 };
 
+// Adding a new client
+
+// Updating an existing client
+
+// Deleting a client by ID
+
+// Searching for a client

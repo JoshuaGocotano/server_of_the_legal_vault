@@ -28,3 +28,10 @@ export const getClients = async (req, res) => {
   }
 };
 
+// Adding a new client
+
+// Updating an existing client
+
+// Deleting a client by ID
+
+// Searching for clients

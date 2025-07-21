@@ -15,7 +15,7 @@ export const getUserById = async (userId) => {
 
 // Fetching All Users from the user_tbl
 export const getUsers = async () => {
-  const { rows } = await query("SELECT * FROM user_tbl ORDER BY user_id ASC");
+  const { rows } = await query("SELECT * FROM user_tbl ORDER BY user_id");
   return rows;
 };
 
