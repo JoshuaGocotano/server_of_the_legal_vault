@@ -2,23 +2,6 @@ import * as userService from "../services/userServices.js";
 import path from "path";
 import fs from "fs";
 
-// Fetching a specific user by ID
-export const getUserById = async (req, res) => {
-  try {
-    const userId = req.params.user_id;
-    const user = await userService.getUserById(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.status(200).json(user);
-  } catch (err) {
-    console.error("Error fetching user by ID", err);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
 // Fetching All Users
 export const getUsers = async (req, res) => {
   try {

@@ -10,7 +10,7 @@ const router = express.Router();
 // Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "D:/Capstone_ni_Angelie/uploads"); 
+    cb(null, "D:/Capstone_ni_Angelie/uploads");
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -34,12 +34,6 @@ const upload = multer({
 });
 
 // Routes
-router.get(
-  "/users/:user_id",
-  verifyUser,
-  requireAdmin,
-  userController.getUserById
-);
 router.get("/users", verifyUser, requireAdmin, userController.getUsers);
 router.post(
   "/users",
