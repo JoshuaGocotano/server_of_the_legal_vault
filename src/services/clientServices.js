@@ -48,3 +48,13 @@ export const searchClients = async (searchTerm) => {
   );
   return rows;
 };
+
+// ---------------- SERVICES OR QUERIES FOR CLIENT CONTACTS
+
+// Fetching all client contacts
+export const getClientContacts = async () => {
+  const { rows } = await query(
+    "SELECT * FROM client_contact_tbl ORDER BY cc_id"
+  );
+  return rows;
+};
