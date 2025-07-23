@@ -13,5 +13,12 @@ router.get("/clients/search", clientController.searchClients);
 
 // Routes for Client Contacts
 router.get("/client-contacts", clientController.getClientContacts);
+router.post("/client-contacts", clientController.createClientContact);
+router.put("/client-contacts/:cc_id", clientController.updateClientContact);
+router.delete(
+  "/client-contacts/:cc_id",
+  clientController.deleteClientContactById
+);
+router.get("/client-contacts/search", clientController.searchClientContacts);
 
 export default router;

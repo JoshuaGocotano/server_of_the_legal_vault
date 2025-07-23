@@ -91,3 +91,67 @@ export const getClientContacts = async (req, res) => {
 };
 
 // Adding a new client contact here...
+export const createClientContact = async (req, res) => {
+  try {
+    const contactData = req.body;
+    const newContact = await clientService.createClientContact(contactData);
+    res.status(201).json(newContact);
+  } catch (err) {
+    console.error("Error creating client contact", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Updating an existing client contact
+export const updateClientContact = async (req, res) => {
+  try {
+    const cc_id = req.params.cc_id;
+    const contactData = req.body;
+    const updatedContact = await clientService.updateClientContact(
+      cc_id,
+      contactData
+    );
+
+    if (!updatedContact) {
+      return res.status(404).json({ message: "Client contact not found" });
+    }
+
+    res.status(200).json(updatedContact);
+  } catch (err) {
+    console.error("Error updating client contact", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Deleting a client contact by ID
+export const deleteClientContactById = async (req, res) => {
+  try {
+    const cc_id = req.params.cc_id;
+    const deletedContact = await clientService.deleteClientContactById(cc_id);
+
+    if (!deletedContact) {
+      return res.status(404).json({ message: "Client contact not found" });
+    }
+
+    res.status(200).json({ message: "Client contact deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting client contact", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Searching for client contacts
+export const searchClientContacts = async (req, res) => {
+  try {
+    const searchTerm = req.query.q;
+    if (!searchTerm) {
+      return res.status(400).json({ message: "Search term is required" });
+    }
+
+    const contacts = await clientService.searchClientContacts(searchTerm);
+    res.status(200).json(contacts);
+  } catch (err) {
+    console.error("Error searching client contacts", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

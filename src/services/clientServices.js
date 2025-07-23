@@ -58,3 +58,41 @@ export const getClientContacts = async () => {
   );
   return rows;
 };
+
+// Adding a new client contact
+export const createClientContact = async (contactData) => {
+  const { cc_fullname, cc_email, cc_phone, cc_role, cc_client } = contactData;
+  const { rows } = await query(
+    "INSERT INTO client_contact_tbl (cc_fullname, cc_email, cc_phone, cc_role, cc_client) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+    [cc_fullname, cc_email, cc_phone, cc_role, cc_client]
+  );
+  return rows[0];
+};
+
+// Updating an existing client contact
+export const updateClientContact = async (cc_id, contactData) => {
+  const { cc_fullname, cc_email, cc_phone, cc_role } = contactData;
+  const { rows } = await query(
+    "UPDATE client_contact_tbl SET cc_fullname = $1, cc_email = $2, cc_phone = $3, cc_role = $4 WHERE cc_id = $5 RETURNING *",
+    [cc_fullname, cc_email, cc_phone, cc_role, cc_id]
+  );
+  return rows[0];
+};
+
+// Deleting a client contact by ID
+export const deleteClientContactById = async (cc_id) => {
+  const { rows } = await query(
+    "DELETE FROM client_contact_tbl WHERE cc_id = $1 RETURNING *",
+    [cc_id]
+  );
+  return rows[0];
+};
+
+// searching for client contacts
+export const searchClientContacts = async (searchTerm) => {
+  const { rows } = await query(
+    "SELECT * FROM client_contact_tbl WHERE cc_fullname ILIKE $1 OR cc_email ILIKE $1 OR cc_phone ILIKE $1",
+    [`%${searchTerm}%`]
+  );
+  return rows;
+};
