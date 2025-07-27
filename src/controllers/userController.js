@@ -92,3 +92,15 @@ export const searchUsers = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// -------------------- CONTROLLER FOR USER LOGS
+
+export const getUserLogs = async (req, res) => {
+  try {
+    const logs = await userService.getUserLogs();
+    res.status(200).json(logs);
+  } catch (err) {
+    console.error("Error fetching user logs", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

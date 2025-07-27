@@ -148,3 +148,12 @@ export const searchUsers = async (searchTerm) => {
 
   return rows;
 };
+
+// --------- SERVICES or QUERIES FOR USER LOGS
+
+export const getUserLogs = async () => {
+  const { rows } = await query(
+    `SELECT * FROM user_log_tbl ORDER BY user_log_time DESC`
+  );
+  return rows;
+};

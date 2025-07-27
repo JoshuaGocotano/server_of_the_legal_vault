@@ -61,4 +61,7 @@ router.get(
   userController.searchUsers
 );
 
+// Route for fetching user logs
+router.get("/user-logs", userController.getUserLogs);
+
 export default router;
