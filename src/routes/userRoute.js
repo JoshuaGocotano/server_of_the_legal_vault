@@ -62,6 +62,7 @@ router.get(
 );
 
 // Route for fetching user logs
-router.get("/user-logs", userController.getUserLogs);
+router.get("/user-logs", verifyUser, requireAdmin, userController.getUserLogs);
+router.get("/user-logs/:user_id", verifyUser, userController.getUserLogsById);
 
 export default router;

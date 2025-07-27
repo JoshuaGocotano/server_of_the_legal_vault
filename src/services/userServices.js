@@ -151,9 +151,19 @@ export const searchUsers = async (searchTerm) => {
 
 // --------- SERVICES or QUERIES FOR USER LOGS
 
+// Fetching User Logs for Admin
 export const getUserLogs = async () => {
   const { rows } = await query(
     `SELECT * FROM user_log_tbl ORDER BY user_log_time DESC`
+  );
+  return rows;
+};
+
+// Fetching User Logs for a Specific User
+export const getUserLogsById = async (userId) => {
+  const { rows } = await query(
+    `SELECT * FROM user_log_tbl WHERE user_id = $1 ORDER BY user_log_time DESC`,
+    [userId]
   );
   return rows;
 };
