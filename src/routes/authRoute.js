@@ -3,6 +3,9 @@ import { query } from "../db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import verifyUser from "../middleware/verifyUser.js";
+import env from "dotenv";
+
+env.config();
 
 const router = express.Router();
 
@@ -30,7 +33,7 @@ router.post("/login", async (req, res) => {
         user_lname: user.user_lname,
         user_profile: user.user_profile,
       },
-      "jwt-secret-key",
+      process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
@@ -41,16 +44,16 @@ router.post("/login", async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    // For logging user login activity
-    await query(
-      `INSERT INTO user_log_tbl (user_log_action, user_log_type, user_ip_address, user_id, user_fullname, user_profile) VALUES ('Login', 'User Log', $1, $2, $3, $4)`,
-      [
-        req.ip,
-        user.user_id,
-        `${user.user_fname} ${user.user_mname} ${user.user_lname}`,
-        user.user_profile,
-      ]
-    );
+    // // For logging user login activity
+    // await query(
+    //   `INSERT INTO user_log_tbl (user_log_action, user_log_type, user_ip_address, user_id, user_fullname, user_profile) VALUES ('Login', 'User Log', $1, $2, $3, $4)`,
+    //   [
+    //     req.ip,
+    //     user.user_id,
+    //     `${user.user_fname} ${user.user_mname} ${user.user_lname}`,
+    //     user.user_profile,
+    //   ]
+    // );
 
     delete user.user_password;
     res.json({ user });
@@ -86,21 +89,21 @@ router.get("/verify", verifyUser, async (req, res) => {
 
 // For logging out
 router.post("/logout", verifyUser, async (req, res) => {
-  try {
-    // Logging user logout activity
-    await query(
-      `INSERT INTO user_log_tbl (user_log_action, user_log_type, user_ip_address, user_id, user_fullname, user_profile) VALUES ('Logout', 'User Log', $1, $2, $3, $4)`,
-      [
-        req.ip,
-        req.user.user_id,
-        `${req.user.user_fname} ${req.user.user_mname} ${req.user.user_lname}`,
-        req.user.user_profile,
-      ]
-    );
-  } catch (err) {
-    console.error("Logout log error:", err);
-    // Don't block logout if logging fails
-  }
+  // try {
+  //   // Logging user logout activity
+  //   await query(
+  //     `INSERT INTO user_log_tbl (user_log_action, user_log_type, user_ip_address, user_id, user_fullname, user_profile) VALUES ('Logout', 'User Log', $1, $2, $3, $4)`,
+  //     [
+  //       req.ip,
+  //       req.user.user_id,
+  //       `${req.user.user_fname} ${req.user.user_mname} ${req.user.user_lname}`,
+  //       req.user.user_profile,
+  //     ]
+  //   );
+  // } catch (err) {
+  //   console.error("Logout log error:", err);
+  //   // Don't block logout if logging fails
+  // }
 
   res.clearCookie("token", {
     httpOnly: true,
