@@ -54,27 +54,34 @@ export const searchClients = async (searchTerm) => {
 // Fetching all client contacts
 export const getClientContacts = async () => {
   const { rows } = await query(
-    "SELECT * FROM client_contact_tbl ORDER BY cc_id"
+    "SELECT * FROM client_contact_tbl ORDER BY contact_id"
   );
   return rows;
 };
 
 // Adding a new client contact
 export const createClientContact = async (contactData) => {
-  const { cc_fullname, cc_email, cc_phone, cc_role, cc_client } = contactData;
+  const {
+    contact_fullname,
+    contact_email,
+    contact_phone,
+    contact_role,
+    client_id,
+  } = contactData;
   const { rows } = await query(
-    "INSERT INTO client_contact_tbl (cc_fullname, cc_email, cc_phone, cc_role, cc_client) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-    [cc_fullname, cc_email, cc_phone, cc_role, cc_client]
+    "INSERT INTO client_contact_tbl (contact_fullname, contact_email, contact_phone, contact_role, client_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+    [contact_fullname, contact_email, contact_phone, contact_role, client_id]
   );
   return rows[0];
 };
 
 // Updating an existing client contact
-export const updateClientContact = async (cc_id, contactData) => {
-  const { cc_fullname, cc_email, cc_phone, cc_role } = contactData;
+export const updateClientContact = async (contact_id, contactData) => {
+  const { contact_fullname, contact_email, contact_phone, contact_role } =
+    contactData;
   const { rows } = await query(
-    "UPDATE client_contact_tbl SET cc_fullname = $1, cc_email = $2, cc_phone = $3, cc_role = $4 WHERE cc_id = $5 RETURNING *",
-    [cc_fullname, cc_email, cc_phone, cc_role, cc_id]
+    "UPDATE client_contact_tbl SET contact_fullname = $1, contact_email = $2, contact_phone = $3, contact_role = $4 WHERE contact_id = $5 RETURNING *",
+    [contact_fullname, contact_email, contact_phone, contact_role, contact_id]
   );
   return rows[0];
 };
@@ -82,8 +89,8 @@ export const updateClientContact = async (cc_id, contactData) => {
 // Deleting a client contact by ID
 export const deleteClientContactById = async (cc_id) => {
   const { rows } = await query(
-    "DELETE FROM client_contact_tbl WHERE cc_id = $1 RETURNING *",
-    [cc_id]
+    "DELETE FROM client_contact_tbl WHERE contact_id = $1 RETURNING *",
+    [contact_id]
   );
   return rows[0];
 };
@@ -91,7 +98,7 @@ export const deleteClientContactById = async (cc_id) => {
 // searching for client contacts
 export const searchClientContacts = async (searchTerm) => {
   const { rows } = await query(
-    "SELECT * FROM client_contact_tbl WHERE cc_fullname ILIKE $1 OR cc_email ILIKE $1 OR cc_phone ILIKE $1",
+    "SELECT * FROM client_contact_tbl WHERE contact_fullname ILIKE $1 OR contact_email ILIKE $1 OR contact_phone ILIKE $1",
     [`%${searchTerm}%`]
   );
   return rows;
