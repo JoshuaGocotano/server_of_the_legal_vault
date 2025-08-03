@@ -17,7 +17,7 @@ export const sendVerificationCode = async (toEmail, code) => {
     to: toEmail,
     subject: "Your Legal Vault 2FA Code",
     text: `Your verification code is: ${code}`,
-    html: `<p>Your verification code is: <strong>${code}</strong></p>`,
+    html: `<p>Your verification code is: <strong>${code}</strong></p> <p>This code is valid for only 5 minutes.</p>`,
   };
 
   return transporter.sendMail(mailOptions);
