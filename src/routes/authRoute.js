@@ -183,7 +183,7 @@ router.post("/logout", verifyUser, async (req, res) => {
     //   ]
     // );
 
-    // ✅ Mark user as not verified
+    // Mark user as not verified
     await query(
       `UPDATE user_tbl SET user_is_verified = false WHERE user_id = $1`,
       [req.user.user_id]
@@ -193,7 +193,7 @@ router.post("/logout", verifyUser, async (req, res) => {
     // Don't block logout if logging or update fails
   }
 
-  // ✅ Clear cookie
+  // Clear cookie
   res.clearCookie("token", {
     httpOnly: true,
     secure: false,
