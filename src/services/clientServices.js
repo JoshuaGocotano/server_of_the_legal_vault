@@ -75,7 +75,7 @@ export const updateClient = async (clientId, clientData) => {
   }
 
   const { rows } = await query(
-    "UPDATE client_tbl SET client_fullname = $1, client_email = $2, client_phonenum = $3, client_password = $4, , client_password = $5 WHERE client_id = $6 RETURNING *",
+    "UPDATE client_tbl SET client_fullname = $1, client_email = $2, client_phonenum = $3, client_password = $4, client_status = $5 WHERE client_id = $6 RETURNING *",
     [
       client_fullname,
       client_email,

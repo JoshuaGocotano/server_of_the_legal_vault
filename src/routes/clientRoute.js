@@ -14,7 +14,7 @@ router.get(
   clientController.getClientsByLawyerId
 );
 router.post("/clients", clientController.createClient);
-router.put("/clients/:client_id", verifyUser, clientController.updateClient);
+router.put("/clients/:client_id", clientController.updateClient);
 router.delete(
   "/clients/:client_id",
   verifyUser,
