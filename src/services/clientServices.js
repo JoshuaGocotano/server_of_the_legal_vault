@@ -2,6 +2,9 @@
 
 import { query } from "../db.js";
 
+import bcrypt from "bcrypt";
+const saltRounds = 10;
+
 // Fetching all clients
 export const getClients = async () => {
   const { rows } = await query(
@@ -12,21 +15,46 @@ export const getClients = async () => {
 
 // Adding a new client
 export const createClient = async (clientData) => {
-  const { client_fullname, client_email, client_phonenum, created_by } =
-    clientData;
+  const {
+    client_fullname,
+    client_email,
+    client_phonenum,
+    created_by,
+    client_password,
+  } = clientData;
+
+  // Hashing here
+  const hashedPassword = await bcrypt.hash(
+    client_password.toString(),
+    saltRounds
+  );
+
   const { rows } = await query(
-    "INSERT INTO client_tbl (client_fullname, client_email, client_phonenum, created_by) VALUES ($1, $2, $3, $4) RETURNING *",
-    [client_fullname, client_email, client_phonenum, created_by]
+    "INSERT INTO client_tbl (client_fullname, client_email, client_phonenum, created_by, client_password) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+    [client_fullname, client_email, client_phonenum, created_by, hashedPassword]
   );
   return rows[0];
 };
 
 // Updating an existing client
 export const updateClient = async (clientId, clientData) => {
-  const { client_fullname, client_email, client_phonenum } = clientData;
+  const { client_fullname, client_email, client_phonenum, client_password } =
+    clientData;
+
+  let hashedPassword = null;
+  if (client_password) {
+    hashedPassword = await bcrypt.hash(client_password.toString(), saltRounds);
+  } else {
+    const { rows } = await query(
+      "SELECT client_password FROM client_tbl WHERE client_id = $1",
+      [clientId]
+    );
+    hashedPassword = rows[0]?.client_password;
+  }
+
   const { rows } = await query(
-    "UPDATE client_tbl SET client_fullname = $1, client_email = $2, client_phonenum = $3 WHERE client_id = $4 RETURNING *",
-    [client_fullname, client_email, client_phonenum, clientId]
+    "UPDATE client_tbl SET client_fullname = $1, client_email = $2, client_phonenum = $3, client_password = $4 WHERE client_id = $5 RETURNING *",
+    [client_fullname, client_email, client_phonenum, hashedPassword, clientId]
   );
   return rows[0];
 };

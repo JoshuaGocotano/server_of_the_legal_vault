@@ -144,7 +144,7 @@ router.post("/resend-otp", async (req, res) => {
   }
 });
 
-// ✅ Session Check Route
+// Session Check Route
 router.get("/verify", verifyUser, async (req, res) => {
   try {
     const { rows } = await query("SELECT * FROM user_tbl WHERE user_id = $1", [

@@ -1,27 +1,68 @@
 import express from "express";
 
 import * as clientController from "../controllers/clientController.js";
+import verifyUser from "../middleware/verifyUser.js";
+import requireAdmin from "../middleware/requireAdmin.js";
 
 const router = express.Router();
 
 // Routes
-router.get("/clients", clientController.getClients);
-router.post("/clients", clientController.createClient);
-router.put("/clients/:client_id", clientController.updateClient);
-router.delete("/clients/:client_id", clientController.deleteClientById);
-router.get("/clients/search", clientController.searchClients);
+router.get("/clients", verifyUser, requireAdmin, clientController.getClients);
+router.post(
+  "/clients",
+  verifyUser,
+  requireAdmin,
+  clientController.createClient
+);
+router.put(
+  "/clients/:client_id",
+  verifyUser,
+  requireAdmin,
+  clientController.updateClient
+);
+router.delete(
+  "/clients/:client_id",
+  verifyUser,
+  requireAdmin,
+  clientController.deleteClientById
+);
+router.get(
+  "/clients/search",
+  verifyUser,
+  requireAdmin,
+  clientController.searchClients
+);
 
 // Routes for Client Contacts
-router.get("/client-contacts", clientController.getClientContacts);
-router.post("/client-contacts", clientController.createClientContact);
+router.get(
+  "/client-contacts",
+  verifyUser,
+  requireAdmin,
+  clientController.getClientContacts
+);
+router.post(
+  "/client-contacts",
+  verifyUser,
+  requireAdmin,
+  clientController.createClientContact
+);
 router.put(
   "/client-contacts/:contact_id",
+  verifyUser,
+  requireAdmin,
   clientController.updateClientContact
 );
 router.delete(
   "/client-contacts/:contact_id",
+  verifyUser,
+  requireAdmin,
   clientController.deleteClientContactById
 );
-router.get("/client-contacts/search", clientController.searchClientContacts);
+router.get(
+  "/client-contacts/search",
+  verifyUser,
+  requireAdmin,
+  clientController.searchClientContacts
+);
 
 export default router;
