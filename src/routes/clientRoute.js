@@ -33,13 +33,11 @@ router.get("/client-contacts", verifyUser, clientController.getClientContacts);
 router.post(
   "/client-contacts",
   verifyUser,
-  requireAdmin,
   clientController.createClientContact
 );
 router.put(
   "/client-contacts/:contact_id",
   verifyUser,
-  requireAdmin,
   clientController.updateClientContact
 );
 router.delete(
