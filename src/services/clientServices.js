@@ -13,6 +13,15 @@ export const getClients = async () => {
   return rows;
 };
 
+// Fetching all clients of a certain lawyer
+export const getClientsByLawyerId = async (userId) => {
+  const { rows } = await query(
+    `SELECT * FROM client_tbl WHERE created_by = $1`,
+    [userId]
+  );
+  return rows;
+};
+
 // Adding a new client
 export const createClient = async (clientData) => {
   const {
@@ -21,6 +30,7 @@ export const createClient = async (clientData) => {
     client_phonenum,
     created_by,
     client_password,
+    client_status = "Active",
   } = clientData;
 
   // Hashing here
@@ -30,16 +40,28 @@ export const createClient = async (clientData) => {
   );
 
   const { rows } = await query(
-    "INSERT INTO client_tbl (client_fullname, client_email, client_phonenum, created_by, client_password) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-    [client_fullname, client_email, client_phonenum, created_by, hashedPassword]
+    "INSERT INTO client_tbl (client_fullname, client_email, client_phonenum, created_by, client_password, client_status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+    [
+      client_fullname,
+      client_email,
+      client_phonenum,
+      created_by,
+      hashedPassword,
+      client_status,
+    ]
   );
   return rows[0];
 };
 
 // Updating an existing client
 export const updateClient = async (clientId, clientData) => {
-  const { client_fullname, client_email, client_phonenum, client_password } =
-    clientData;
+  const {
+    client_fullname,
+    client_email,
+    client_phonenum,
+    client_password,
+    client_status,
+  } = clientData;
 
   let hashedPassword = null;
   if (client_password) {
@@ -53,8 +75,15 @@ export const updateClient = async (clientId, clientData) => {
   }
 
   const { rows } = await query(
-    "UPDATE client_tbl SET client_fullname = $1, client_email = $2, client_phonenum = $3, client_password = $4 WHERE client_id = $5 RETURNING *",
-    [client_fullname, client_email, client_phonenum, hashedPassword, clientId]
+    "UPDATE client_tbl SET client_fullname = $1, client_email = $2, client_phonenum = $3, client_password = $4, , client_password = $5 WHERE client_id = $6 RETURNING *",
+    [
+      client_fullname,
+      client_email,
+      client_phonenum,
+      hashedPassword,
+      client_status,
+      clientId,
+    ]
   );
   return rows[0];
 };

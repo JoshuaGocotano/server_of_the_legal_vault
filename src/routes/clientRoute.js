@@ -7,19 +7,14 @@ import requireAdmin from "../middleware/requireAdmin.js";
 const router = express.Router();
 
 // Routes
-router.get("/clients", verifyUser, requireAdmin, clientController.getClients);
-router.post(
-  "/clients",
+router.get("/clients", clientController.getClients);
+router.get(
+  "/clients/:user_id",
   verifyUser,
-  requireAdmin,
-  clientController.createClient
+  clientController.getClientsByLawyerId
 );
-router.put(
-  "/clients/:client_id",
-  verifyUser,
-  requireAdmin,
-  clientController.updateClient
-);
+router.post("/clients", clientController.createClient);
+router.put("/clients/:client_id", verifyUser, clientController.updateClient);
 router.delete(
   "/clients/:client_id",
   verifyUser,
@@ -34,12 +29,7 @@ router.get(
 );
 
 // Routes for Client Contacts
-router.get(
-  "/client-contacts",
-  verifyUser,
-  requireAdmin,
-  clientController.getClientContacts
-);
+router.get("/client-contacts", verifyUser, clientController.getClientContacts);
 router.post(
   "/client-contacts",
   verifyUser,

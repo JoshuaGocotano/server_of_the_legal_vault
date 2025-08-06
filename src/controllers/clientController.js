@@ -1,6 +1,6 @@
 import * as clientService from "../services/clientServices.js";
 
-//Fetching all clients
+// Fetching all clients
 export const getClients = async (req, res) => {
   try {
     const client = await clientService.getClients();
@@ -10,6 +10,19 @@ export const getClients = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// Fetching all clients of a certain lawyer
+export const getClientsByLawyerId = async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+    const clients = await clientService.getClientsByLawyerId(userId);
+    res.status(200).json(clients);
+  } catch (err) {
+    console.error("Error fetching client/s with this lawyer:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 
 // Adding a new client
 export const createClient = async (req, res) => {
