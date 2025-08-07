@@ -5,8 +5,16 @@ import { query } from "../db.js";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
-// Fetching all clients
+// Fetching clients (The only ones that are not Removed)
 export const getClients = async () => {
+  const { rows } = await query(
+    "SELECT * FROM client_tbl WHERE client_status = 'Active' or client_status = 'Pending' ORDER BY client_id ASC"
+  );
+  return rows;
+};
+
+// Fetching ALL Clients (with those Removed)
+export const getAllClients = async () => {
   const { rows } = await query(
     "SELECT * FROM client_tbl ORDER BY client_id ASC"
   );

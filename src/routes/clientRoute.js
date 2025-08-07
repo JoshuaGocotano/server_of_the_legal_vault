@@ -8,10 +8,11 @@ const router = express.Router();
 
 // Routes
 router.get("/clients", clientController.getClients);
+router.get("/all-clients", clientController.getAllClients);
 router.get(
   "/clients/:user_id",
   verifyUser,
-  clientController.getClientsByLawyerId
+  clientController.getClientsByLawyerId // this api gets the clients of a certain lawyer
 );
 router.post("/clients", clientController.createClient);
 router.put("/clients/:client_id", clientController.updateClient);
