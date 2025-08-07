@@ -8,7 +8,7 @@ const saltRounds = 10;
 // Fetching clients (The only ones that are not Removed)
 export const getClients = async () => {
   const { rows } = await query(
-    "SELECT * FROM client_tbl WHERE client_status = 'Active' or client_status = 'Pending' ORDER BY client_id ASC"
+    "SELECT * FROM client_tbl WHERE client_status = 'Active' or client_status = 'Inactive' ORDER BY client_id ASC"
   );
   return rows;
 };
