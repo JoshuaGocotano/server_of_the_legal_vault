@@ -34,7 +34,6 @@ export const getClientsByLawyerId = async (req, res) => {
   }
 };
 
-
 // Adding a new client
 export const createClient = async (req, res) => {
   try {

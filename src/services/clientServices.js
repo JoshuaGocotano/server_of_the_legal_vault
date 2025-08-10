@@ -142,11 +142,23 @@ export const createClientContact = async (contactData) => {
 
 // Updating an existing client contact
 export const updateClientContact = async (contact_id, contactData) => {
-  const { contact_fullname, contact_email, contact_phone, contact_role } =
-    contactData;
+  const {
+    contact_fullname,
+    contact_email,
+    contact_phone,
+    contact_role,
+    client_id,
+  } = contactData;
   const { rows } = await query(
-    "UPDATE client_contact_tbl SET contact_fullname = $1, contact_email = $2, contact_phone = $3, contact_role = $4 WHERE contact_id = $5 RETURNING *",
-    [contact_fullname, contact_email, contact_phone, contact_role, contact_id]
+    "UPDATE client_contact_tbl SET contact_fullname = $1, contact_email = $2, contact_phone = $3, contact_role = $4, client_id = $5 WHERE contact_id = $6 RETURNING *",
+    [
+      contact_fullname,
+      contact_email,
+      contact_phone,
+      contact_role,
+      client_id,
+      contact_id,
+    ]
   );
   return rows[0];
 };
