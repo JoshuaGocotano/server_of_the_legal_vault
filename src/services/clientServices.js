@@ -119,7 +119,8 @@ export const searchClients = async (searchTerm) => {
 // Fetching all client contacts
 export const getClientContacts = async () => {
   const { rows } = await query(
-    "SELECT * FROM client_contact_tbl ORDER BY contact_id"
+    `SELECT * FROM client_contact_tbl, client_tbl
+    WHERE client_contact_tbl.client_id = client_tbl.client_id AND client_tbl.client_status != 'Removed'`
   );
   return rows;
 };
