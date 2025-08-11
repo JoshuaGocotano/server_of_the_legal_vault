@@ -7,15 +7,15 @@ import requireAdmin from "../middleware/requireAdmin.js";
 const router = express.Router();
 
 // Routes
-router.get("/clients", clientController.getClients);
-router.get("/all-clients", clientController.getAllClients);
+router.get("/clients", verifyUser, clientController.getClients);
+router.get("/all-clients", verifyUser, clientController.getAllClients);
 router.get(
   "/clients/:user_id",
   verifyUser,
   clientController.getClientsByLawyerId // this api gets the clients of a certain lawyer
 );
-router.post("/clients", clientController.createClient);
-router.put("/clients/:client_id", clientController.updateClient);
+router.post("/clients", verifyUser, clientController.createClient);
+router.put("/clients/:client_id", verifyUser, clientController.updateClient);
 router.delete(
   "/clients/:client_id",
   verifyUser,
@@ -30,9 +30,10 @@ router.get(
 );
 
 // Routes for Client Contacts
-router.get("/client-contacts", clientController.getClientContacts);
+router.get("/client-contacts", verifyUser, clientController.getClientContacts);
 router.get(
   "/a-lawyer-client-contacts/:user_id",
+  verifyUser,
   clientController.getLawyersClientContacts
 );
 router.post(
