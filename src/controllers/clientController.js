@@ -113,6 +113,18 @@ export const getClientContacts = async (req, res) => {
   }
 };
 
+export const getLawyersClientContacts = async (req, res) => {
+  try {
+    const lawyerId = req.params.user_id;
+    const contacts = await clientService.getLawyersClientContacts(lawyerId);
+
+    res.status(200).json(contacts);
+  } catch (err) {
+    console.error("Error fetching lawyer's client contacts", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // Adding a new client contact here...
 export const createClientContact = async (req, res) => {
   try {

@@ -30,7 +30,11 @@ router.get(
 );
 
 // Routes for Client Contacts
-router.get("/client-contacts", verifyUser, clientController.getClientContacts);
+router.get("/client-contacts", clientController.getClientContacts);
+router.get(
+  "/a-lawyer-client-contacts/:user_id",
+  clientController.getLawyersClientContacts
+);
 router.post(
   "/client-contacts",
   verifyUser,

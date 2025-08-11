@@ -124,6 +124,24 @@ export const getClientContacts = async () => {
   return rows;
 };
 
+// Fetching a lawyer's clients' contacts
+export const getLawyersClientContacts = async (lawyerUserId) => {
+  const { rows } = await query(
+    `
+    SELECT *
+    FROM client_contact_tbl AS cc
+    JOIN client_tbl AS c 
+        ON cc.client_id = c.client_id
+    JOIN user_tbl AS u
+        ON c.created_by = u.user_id
+    WHERE u.user_id = $1
+    `,
+    [lawyerUserId]
+  );
+
+  return rows;
+};
+
 // Adding a new client contact
 export const createClientContact = async (contactData) => {
   const {
