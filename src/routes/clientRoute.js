@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Routes
 router.get("/clients", verifyUser, clientController.getClients);
-router.get("/all-clients", verifyUser, clientController.getAllClients);
+router.get("/all-clients", verifyUser, clientController.getAllClients); // only for ADMIN
 router.get(
   "/clients/:user_id",
   verifyUser,

@@ -24,7 +24,7 @@ export const getAllClients = async () => {
 // Fetching all clients of a certain lawyer
 export const getClientsByLawyerId = async (userId) => {
   const { rows } = await query(
-    `SELECT * FROM client_tbl WHERE created_by = $1`,
+    `SELECT * FROM client_tbl WHERE created_by = $1 AND client_status != 'Removed'`,
     [userId]
   );
   return rows;
@@ -135,7 +135,7 @@ export const getLawyersClientContacts = async (lawyerUserId) => {
         ON cc.client_id = c.client_id
     JOIN user_tbl AS u
         ON c.created_by = u.user_id
-    WHERE u.user_id = $1
+    WHERE u.user_id = $1 AND c.client_status != 'Removed'
     `,
     [lawyerUserId]
   );
