@@ -34,7 +34,7 @@ const upload = multer({
 });
 
 // Routes
-router.get("/users", verifyUser, userController.getUsers);
+router.get("/users", verifyUser, requireAdmin, userController.getUsers);
 router.post(
   "/users",
   verifyUser,
