@@ -22,3 +22,15 @@ export const sendVerificationCode = async (toEmail, code) => {
 
   return transporter.sendMail(mailOptions);
 };
+
+export const sendResetLink = async (toEmail, link) => {
+  const mailOptions = {
+    from: `"Legal Vault" <${process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject: "Password Reset Request",
+    text: `Click the link below to reset your password:\n${link}`,
+    html: `<p>Click the link below to reset your password:</p> <a href="${link}">Reset Link</a>`,
+  };
+
+  return transporter.sendMail(mailOptions);
+};

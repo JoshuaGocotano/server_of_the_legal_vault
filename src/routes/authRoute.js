@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import verifyUser from "../middleware/verifyUser.js";
 import env from "dotenv";
 
-import { sendVerificationCode } from "../utils/mailer.js";
+import { sendVerificationCode, sendResetLink } from "../utils/mailer.js";
 
 env.config();
 
@@ -190,7 +190,6 @@ router.post("/logout", verifyUser, async (req, res) => {
     );
   } catch (err) {
     console.error("Logout log or update error:", err);
-    // Don't block logout if logging or update fails
   }
 
   // Clear cookie
@@ -201,6 +200,70 @@ router.post("/logout", verifyUser, async (req, res) => {
   });
 
   return res.json({ message: "Logged out successfully" });
+});
+
+// Forget Password Route
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const { rows } = await query(
+      "SELECT * FROM user_tbl WHERE user_email = $1",
+      [email]
+    );
+    const user = rows[0];
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    // Generate reset token
+    const resetToken = jwt.sign(
+      { user_id: user.user_id, user_email: user.user_email },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    // Send email with reset link
+    const resetLink = `${process.env.CLIENT_URL}/change-password/${resetToken}`;
+    await sendResetLink(user.user_email, resetLink);
+
+    res.json({
+      message: "Password reset link sent to your email.",
+    });
+  } catch (err) {
+    console.error("Forget password error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Reset Password Route
+router.post("/reset-password", async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    if (!token || !newPassword) {
+      return res
+        .status(400)
+        .json({ error: "Token and new password are required." });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.user_id;
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password in database
+    await query("UPDATE user_tbl SET user_password = $1 WHERE user_id = $2", [
+      hashedPassword,
+      userId,
+    ]);
+
+    res.json({ message: "Password reset successfully." });
+  } catch (err) {
+    console.error("Reset password error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 export default router;
