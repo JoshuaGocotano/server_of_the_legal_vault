@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoute.js";
 import userRoutes from "./routes/userRoute.js";
 import branchRoutes from "./routes/branchRoute.js";
 import clientRoutes from "./routes/clientRoute.js";
+import caseRoutes from "./routes/caseRoute.js";
 
 const app = express();
 const port = 3000;
@@ -15,7 +16,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://localhost:4000",                                                                                                                                                        
+    origin: "http://localhost:4000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -25,6 +26,8 @@ app.use("/api", branchRoutes);
 app.use("/api", userRoutes);
 app.use("/api", clientRoutes);
 app.use("/api", authRoutes); // authentication api
+app.use("/api", caseRoutes);
+
 app.use("/uploads", express.static("D:/Capstone_ni_Angelie/uploads")); // user profile uploads
 
 app.listen(port, "0.0.0.0", () => {
