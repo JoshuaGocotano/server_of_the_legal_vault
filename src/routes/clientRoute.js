@@ -9,11 +9,6 @@ const router = express.Router();
 // Routes
 router.get("/clients", verifyUser, clientController.getClients);
 router.get("/all-clients", verifyUser, clientController.getAllClients); // only for ADMIN
-router.get(
-  "/clients/:user_id",
-  verifyUser,
-  clientController.getClientsByLawyerId // this api gets the clients of a certain lawyer
-);
 router.post("/clients", verifyUser, clientController.createClient);
 router.put("/clients/:client_id", verifyUser, clientController.updateClient);
 router.delete(
@@ -27,6 +22,11 @@ router.get(
   verifyUser,
   requireAdmin,
   clientController.searchClients
+);
+router.get(
+  "/clients/:user_id",
+  verifyUser,
+  clientController.getClientsByLawyerId // this api gets the clients of a certain lawyer
 );
 
 // Routes for Client Contacts

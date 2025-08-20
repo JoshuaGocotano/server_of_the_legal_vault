@@ -150,7 +150,9 @@ export const searchCases = async (searchTerm) => {
     LEFT JOIN client_tbl cl ON c.client_id = cl.client_id
     LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
     LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
-    WHERE ct.ct_name ILIKE $1 OR cl.client_fullname ILIKE $1 OR c.case_status ILIKE $1 OR cl.client_name ILIKE $1 OR u.user_fname ILIKE $1 OR u.user_lname ILIKE $1
+    WHERE ct.ct_name ILIKE $1 OR cl.client_fullname ILIKE $1
+      OR c.case_status ILIKE $1 OR u.user_fname ILIKE $1 
+      OR u.user_mname ILIKE $1 OR u.user_lname ILIKE $1
     ORDER BY c.case_id;
   `;
   const { rows } = await query(queryStr, [`%${searchTerm}%`]);

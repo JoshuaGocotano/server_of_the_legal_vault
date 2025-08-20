@@ -80,6 +80,15 @@ export const deleteCase = async (req, res) => {
     console.error("Error deleting case", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
 
-
+export const searchCases = async (req, res) => {
+  try {
+    const searchTerm = req.query.q || "";
+    const cases = await caseServices.searchCases(searchTerm);
+    res.status(200).json(cases);
+  } catch (err) {
+    console.error("Error searching cases", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
