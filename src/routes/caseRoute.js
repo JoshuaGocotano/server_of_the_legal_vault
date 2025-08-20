@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.get("/cases", caseController.getCases);
 router.get("/cases/:case_id", caseController.getCaseById);
+router.get("/cases/user/:user_id", caseController.getCasesByUserId);
 router.post("/cases", caseController.createCase);
+router.put("/cases/:case_id", caseController.updateCase);
 
 export default router;

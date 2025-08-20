@@ -7,10 +7,10 @@ export const getCases = async () => {
   const queryStr = `
     SELECT *
     FROM case_tbl c
-    JOIN user_tbl u ON c.user_id = u.user_id
-    JOIN client_tbl cl ON c.client_id = cl.client_id
-    JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
-    JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
+    LEFT JOIN user_tbl u ON c.user_id = u.user_id
+    LEFT JOIN client_tbl cl ON c.client_id = cl.client_id
+    LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
+    LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
     ORDER BY c.case_id;
   `;
   const { rows } = await query(queryStr);
@@ -22,15 +22,31 @@ export const getCaseById = async (caseId) => {
   const queryStr = `
     SELECT *
     FROM case_tbl c
-    JOIN user_tbl u ON c.user_id = u.user_id
-    JOIN client_tbl cl ON c.client_id = cl.client_id
-    JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
-    JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
+    LEFT JOIN user_tbl u ON c.user_id = u.user_id
+    LEFT JOIN client_tbl cl ON c.client_id = cl.client_id
+    LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
+    LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
     WHERE c.case_id = $1
     ORDER BY c.case_id;
   `;
   const { rows } = await query(queryStr, [caseId]);
   return rows[0];
+};
+
+// Fetching Cases by User ID (A Certain Lawyer's Cases)
+export const getCasesByUserId = async (userId) => {
+  const queryStr = `
+    SELECT *
+    FROM case_tbl c
+    LEFT JOIN user_tbl u ON c.user_id = u.user_id
+    LEFT JOIN client_tbl cl ON c.client_id = cl.client_id
+    LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
+    LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
+    WHERE c.user_id = $1
+    ORDER BY c.case_id;
+  `;
+  const { rows } = await query(queryStr, [userId]);
+  return rows;
 };
 
 // Creating a New Case
@@ -67,4 +83,76 @@ export const createCase = async (caseData) => {
   ]);
 
   return rows[0];
+};
+
+// Updating an Existing Case
+export const updateCase = async (caseId, caseData) => {
+  const {
+    case_status,
+    case_fee,
+    case_balance,
+    case_remarks,
+    case_cabinet,
+    case_drawer,
+    user_id,
+    client_id,
+    cc_id,
+    ct_id,
+  } = caseData;
+
+  const queryStr = `
+    UPDATE case_tbl
+    SET case_last_updated = NOW(), case_status = $1, case_fee = $2, case_balance = $3, case_remarks = $4, case_cabinet = $5, case_drawer = $6, user_id = $7, client_id = $8, cc_id = $9, ct_id = $10
+    WHERE case_id = $11
+    RETURNING *;
+  `;
+
+  const { rows } = await query(queryStr, [
+    case_status,
+    case_fee,
+    case_balance,
+    case_remarks,
+    case_cabinet,
+    case_drawer,
+    user_id,
+    client_id,
+    cc_id,
+    ct_id,
+    caseId,
+  ]);
+
+  return rows[0];
+};
+
+// Deleting a Case
+export const deleteCase = async (caseId) => {
+  const queryStr = `
+    DELETE FROM case_tbl
+    WHERE case_id = $1
+    RETURNING *;
+  `;
+
+  const { rows } = await query(queryStr, [caseId]);
+
+  if (rows.length === 0) {
+    throw new Error("Case not found");
+  }
+
+  return rows[0];
+};
+
+// Search Cases
+export const searchCases = async (searchTerm) => {
+  const queryStr = `
+    SELECT *
+    FROM case_tbl c
+    LEFT JOIN user_tbl u ON c.user_id = u.user_id
+    LEFT JOIN client_tbl cl ON c.client_id = cl.client_id
+    LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
+    LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
+    WHERE ct.ct_name ILIKE $1 OR cl.client_fullname ILIKE $1 OR c.case_status ILIKE $1 OR cl.client_name ILIKE $1 OR u.user_fname ILIKE $1 OR u.user_lname ILIKE $1
+    ORDER BY c.case_id;
+  `;
+  const { rows } = await query(queryStr, [`%${searchTerm}%`]);
+  return rows;
 };
