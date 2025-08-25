@@ -5,7 +5,11 @@ import { query } from "../db.js";
 // Fetching All Payments
 export const getPayments = async () => {
   const { rows } = await query(
-    "SELECT * FROM payment_tbl ORDER BY payment_date DESC"
+    `SELECT *
+        FROM payment_tbl p
+        JOIN case_tbl c ON p.case_id = c.case_id
+        JOIN user_tbl u ON p.user_id = u.user_id
+        ORDER BY p.payment_date DESC`
   );
   return rows;
 };
