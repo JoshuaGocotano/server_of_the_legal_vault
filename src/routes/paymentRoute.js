@@ -5,11 +5,13 @@ import verifyUser from "../middleware/verifyUser.js";
 
 const router = express.Router();
 
-router.get("/payments", verifyUser, paymentController.getPayments);
+router.get("/payments", paymentController.getPayments);
+router.get("/payments/case/:case_id", paymentController.getPaymentsByCaseId);
 router.get(
-  "/payments/:lawyer_id",
-  verifyUser,
+  "/payments/lawyer/:lawyer_id",
   paymentController.getPaymentsByLawyerId
 );
+router.post("/payments", paymentController.addPayment);
+router.delete("/payments/:payment_id", paymentController.deletePayment);
 
 export default router;
