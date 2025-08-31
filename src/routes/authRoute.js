@@ -25,6 +25,13 @@ router.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.user_password);
     if (!isMatch) return res.status(401).json({ error: "Incorrect password" });
 
+    // If user is suspended, reject login
+    if (user.user_status === "Suspended") {
+      return res
+        .status(403)
+        .json({ error: "Account is suspended. Try to contact the admin." });
+    }
+
     // Generate OTP and expiry
     const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
     const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
