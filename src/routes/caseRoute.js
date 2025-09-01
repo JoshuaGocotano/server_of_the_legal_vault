@@ -14,4 +14,8 @@ router.delete("/cases/:case_id", caseController.deleteCase);
 router.get("/cases/search", caseController.searchCases);
 router.get("/cases/:case_id", caseController.getCaseById);
 
+// Routes for case categories and types
+router.get("/case-categories", caseController.getCaseCategories);
+router.get("/case-category-types", caseController.getCaseCategoryTypes);
+
 export default router;

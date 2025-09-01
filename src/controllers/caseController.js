@@ -92,3 +92,25 @@ export const searchCases = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// Additional controllers for case categories and types
+
+export const getCaseCategories = async (req, res) => {
+  try {
+    const categories = await caseServices.getCaseCategories();
+    res.status(200).json(categories);
+  } catch (err) {
+    console.error("Error fetching case categories", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getCaseCategoryTypes = async (req, res) => {
+  try {
+    const types = await caseServices.getCaseCategoryTypes();
+    res.status(200).json(types);
+  } catch (err) {
+    console.error("Error fetching case category types", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

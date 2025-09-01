@@ -160,3 +160,21 @@ export const searchCases = async (searchTerm) => {
   const { rows } = await query(queryStr, [`%${searchTerm}%`]);
   return rows;
 };
+
+// Case Categories and Types Services
+
+export const getCaseCategories = async () => {
+  const queryStr = `
+    SELECT * FROM case_category_tbl ORDER BY cc_id;
+  `;
+  const { rows } = await query(queryStr);
+  return rows;
+};
+
+export const getCaseCategoryTypes = async () => {
+  const queryStr = `
+    SELECT * FROM cc_type_tbl ORDER BY ct_id;
+  `;
+  const { rows } = await query(queryStr);
+  return rows;
+};
