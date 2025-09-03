@@ -61,8 +61,15 @@ router.get(
   userController.searchUsers
 );
 
-// Route for fetching user logs
+// Routes for fetching user logs
 router.get("/user-logs", verifyUser, userController.getUserLogs);
 router.get("/user-logs/:user_id", verifyUser, userController.getUserLogsById);
+
+// Routes for fetching the lawyers' specializations
+router.get(
+  "/lawyer-specializations",
+  verifyUser,
+  userController.getLawyersByCaseCategoryTypes
+);
 
 export default router;

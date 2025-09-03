@@ -167,3 +167,23 @@ export const getUserLogsById = async (userId) => {
   );
   return rows;
 };
+
+// ---------- SERVICES or QUERIES FOR LAWYERS' CASE SPECIALTIES
+
+export const getLawyersByCaseCategoryTypes = async () => {
+  const { rows } = await query(
+    `SELECT DISTINCT 
+        ct.ct_id,
+        ct.ct_name,
+        u.user_id,
+        u.user_fname,
+	      u.user_mname,
+	      u.user_lname
+      FROM case_tbl c
+      JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
+      JOIN user_tbl u ON c.user_id = u.user_id
+      ORDER BY ct.ct_id, u.user_fname;
+    `
+  );
+  return rows;
+};
