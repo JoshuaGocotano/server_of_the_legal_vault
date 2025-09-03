@@ -12,7 +12,7 @@ export const getCases = async () => {
     LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
     LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
     LEFT JOIN branch_tbl b ON u.branch_id = b.branch_id
-    ORDER BY c.case_id;
+    ORDER BY c.case_date_created DESC;
   `;
   const { rows } = await query(queryStr);
   return rows;
@@ -28,7 +28,7 @@ export const getCaseById = async (caseId) => {
     LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
     LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
     WHERE c.case_id = $1
-    ORDER BY c.case_id;
+    ORDER BY c.case_date_created DESC;
   `;
   const { rows } = await query(queryStr, [caseId]);
   return rows[0];
