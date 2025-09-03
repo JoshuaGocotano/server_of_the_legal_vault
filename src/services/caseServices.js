@@ -45,7 +45,7 @@ export const getCasesByUserId = async (userId) => {
     LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
     LEFT JOIN branch_tbl b ON u.branch_id = b.branch_id
     WHERE c.user_id = $1 OR c.user_id IS NULL
-    ORDER BY c.case_id;
+    ORDER BY c.case_date_created DESC;
   `;
   const { rows } = await query(queryStr, [userId]);
   return rows;
@@ -63,11 +63,12 @@ export const createCase = async (caseData) => {
     client_id,
     cc_id,
     ct_id,
+    assigned_by,
   } = caseData;
 
   const queryStr = `
-    INSERT INTO case_tbl (case_status, case_fee, case_balance, case_remarks, case_cabinet, case_drawer, user_id, client_id, cc_id, ct_id)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    INSERT INTO case_tbl (case_status, case_fee, case_balance, case_remarks, case_cabinet, case_drawer, user_id, client_id, cc_id, ct_id, assigned_by)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     RETURNING *;
   `;
 
@@ -82,6 +83,7 @@ export const createCase = async (caseData) => {
     client_id,
     cc_id,
     ct_id,
+    assigned_by,
   ]);
 
   return rows[0];
