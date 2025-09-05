@@ -180,3 +180,45 @@ export const getCaseCategoryTypes = async () => {
   const { rows } = await query(queryStr);
   return rows;
 };
+
+// other services
+
+export const getAdmins = async () => {
+  const queryStr = `
+    SELECT * FROM user_tbl WHERE user_role = 'Admin' ORDER BY user_id;
+  `;
+  const { rows } = await query(queryStr);
+  return rows;
+};
+
+export const getUserById = async (userId) => {
+  const queryStr = `
+    SELECT * FROM user_tbl WHERE user_id = $1;
+  `;
+  const { rows } = await query(queryStr, [userId]);
+  return rows[0];
+};
+
+export const getClientEmailById = async (clientId) => {
+  const queryStr = `
+    SELECT client_email FROM client_tbl WHERE client_id = $1;
+  `;
+  const { rows } = await query(queryStr, [clientId]);
+  return rows[0] ? rows[0].client_email : null;
+};
+
+export const getCaseCategoryNameById = async (ccId) => {
+  const queryStr = `
+    SELECT cc_name FROM case_category_tbl WHERE cc_id = $1;
+  `;
+  const { rows } = await query(queryStr, [ccId]);
+  return rows[0] ? rows[0].cc_name : null;
+};
+
+export const getCaseTypeNameById = async (ctId) => {
+  const queryStr = `
+    SELECT ct_name FROM cc_type_tbl WHERE ct_id = $1;
+  `;
+  const { rows } = await query(queryStr, [ctId]);
+  return rows[0] ? rows[0].ct_name : null;
+};
