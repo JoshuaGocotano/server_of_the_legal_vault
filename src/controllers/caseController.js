@@ -121,6 +121,13 @@ export const updateCase = async (req, res) => {
     );
     const admins = await caseServices.getAdmins();
 
+    let lawyer_text = "No lawyer assigned yet";
+    if (user) {
+      lawyer_text = `Lawyer: ${user.user_fname} ${
+        user.user_mname ? user.user_mname : ""
+      } ${user.user_lname}`;
+    }
+
     // notifying all super lawyers or admins
     admins.forEach((admin) => {
       sendCaseUpdateNotification(
@@ -130,27 +137,27 @@ export const updateCase = async (req, res) => {
           updatedCase.case_id
         }) was done by ${updatedBy.user_fname} ${
           updatedBy.user_mname ? updatedBy.user_mname : ""
-        } ${updatedBy.user_lname}.\nLawyer: ${user.user_fname} ${
-          user.user_mname ? user.user_mname : ""
-        } ${user.user_lname}.`
+        } ${updatedBy.user_lname}.\n${lawyer_text}.`
           .replace(/\s+/g, " ")
           .trim()
       );
     });
 
-    // notifying the one who updated (lawyer or admin/super lawyer)
-    sendCaseUpdateNotification(
-      user.user_email,
-      "Case Update for Lawyer",
-      `A new update on your ${cc_name}: ${ct_name} of ${client_name}. \nRemarks: ${updatedCase.case_remarks}
+    // notifying the lawyer (lawyer or admin/super lawyer) only if there is a lawyer assigned
+    if (user) {
+      sendCaseUpdateNotification(
+        user.user_email,
+        "Case Update for Lawyer",
+        `A new update on your ${cc_name}: ${ct_name} of ${client_name}. \nRemarks: ${updatedCase.case_remarks}
       \n\nPlease check the Legal Vault for more details.`
-    );
+      );
+    }
 
     // notifying the client
     sendCaseUpdateNotification(
       client_email,
       "Case Successfully Updated in the BOS' Legal Vault",
-      `Hello ${client_name},\nYour ${ct_name}: ${cc_name} (Case ID: ${updatedCase.case_id}) has been successfully updated in our system. Please contact your lawyer for more details.`
+      `Hello ${client_name},\n\nYour ${cc_name}: ${ct_name} has been successfully updated in our system. Please contact your lawyer for more details.`
     );
 
     if (!updatedCase) {
