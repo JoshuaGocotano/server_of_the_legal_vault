@@ -1,4 +1,3 @@
-import { useState } from "react";
 import * as caseServices from "../services/caseServices.js";
 import {
   sendCaseCreationNotification,
@@ -47,13 +46,11 @@ export const createCase = async (req, res) => {
     const caseData = req.body;
     const newCase = await caseServices.createCase(caseData);
 
-    const [creator, setCreator] = useState();
+    let creator;
     if (newCase.assigned_by) {
-      const creator = await caseServices.getUserById(newCase.assigned_by);
-      setCreator(creator);
+      creator = await caseServices.getUserById(newCase.assigned_by);
     } else {
-      const creator = await caseServices.getUserById(newCase.user_id);
-      setCreator(creator);
+      creator = await caseServices.getUserById(newCase.user_id);
     }
 
     const cc_name = await caseServices.getCaseCategoryNameById(newCase.cc_id);
