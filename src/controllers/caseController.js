@@ -1,3 +1,4 @@
+import { useState } from "react";
 import * as caseServices from "../services/caseServices.js";
 import {
   sendCaseCreationNotification,
@@ -46,9 +47,20 @@ export const createCase = async (req, res) => {
     const caseData = req.body;
     const newCase = await caseServices.createCase(caseData);
 
-    const user = await caseServices.getUserById(newCase.user_id);
+    const [creator, setCreator] = useState();
+    if (newCase.assigned_by) {
+      const creator = await caseServices.getUserById(newCase.assigned_by);
+      setCreator(creator);
+    } else {
+      const creator = await caseServices.getUserById(newCase.user_id);
+      setCreator(creator);
+    }
+
     const cc_name = await caseServices.getCaseCategoryNameById(newCase.cc_id);
     const ct_name = await caseServices.getCaseTypeNameById(newCase.ct_id);
+    const client_name = await caseServices.getClientNameById(
+      caseData.client_id
+    );
     const client_email = await caseServices.getClientEmailById(
       caseData.client_id
     );
@@ -59,9 +71,11 @@ export const createCase = async (req, res) => {
       sendCaseCreationNotification(
         admin.user_email,
         "New Case Created",
-        `A new ${cc_name}: ${ct_name} was created by ${user.user_fname} ${
-          user.user_mname ? user.user_mname : ""
-        } ${user.user_lname}.`
+        `A new ${cc_name}: ${ct_name} (Case ID: ${
+          newCase.case_id
+        }) was created by ${creator.user_fname} ${
+          creator.user_mname ? creator.user_mname : ""
+        } ${creator.user_lname}.`
           .replace(/\s+/g, " ")
           .trim()
       );
@@ -69,16 +83,17 @@ export const createCase = async (req, res) => {
 
     // notifying the creator (lawyer or admin/super lawyer)
     sendCaseCreationNotification(
-      user.user_email,
+      creator.user_email,
       "Case Created Successfully",
-      `You have successfully created a new ${cc_name}: ${ct_name}.`
+      `You have successfully created a new ${cc_name}: ${ct_name} of ${client_name}. \nRemarks: ${newCase.case_remarks}
+      \n\nPlease check the Legal Vault for more details.`
     );
 
     // notifying the client
     sendCaseCreationNotification(
       client_email,
       "Case Successfully Created with BOS' Legal Vault",
-      `Your case, ${ct_name} (${cc_name}), has been successfully added in our system. Please contact your lawyer for more details.`
+      `Hello ${client_name},\n\nYour case: ${ct_name} (${cc_name}), has been successfully added in our system. Please contact your lawyer for more details.`
     );
 
     res.status(201).json(newCase);
@@ -100,6 +115,9 @@ export const updateCase = async (req, res) => {
       updatedCase.cc_id
     );
     const ct_name = await caseServices.getCaseTypeNameById(updatedCase.ct_id);
+    const client_name = await caseServices.getClientNameById(
+      caseData.client_id
+    );
     const client_email = await caseServices.getClientEmailById(
       caseData.client_id
     );
@@ -110,7 +128,9 @@ export const updateCase = async (req, res) => {
       sendCaseUpdateNotification(
         admin.user_email,
         "Case Update",
-        `An update on ${cc_name}: ${ct_name} was done by ${user.user_fname} ${
+        `An update on ${cc_name}: ${ct_name} (Case ID: ${
+          updatedCase.case_id
+        }) \nLawyer: ${user.user_fname} ${
           user.user_mname ? user.user_mname : ""
         } ${user.user_lname}.`
           .replace(/\s+/g, " ")
@@ -121,15 +141,16 @@ export const updateCase = async (req, res) => {
     // notifying the one who updated (lawyer or admin/super lawyer)
     sendCaseUpdateNotification(
       user.user_email,
-      "Case Updated Successfully",
-      `You have successfully updated the ${cc_name}: ${ct_name}.`
+      "Case Update",
+      `A new update on your ${cc_name}: ${ct_name} of ${client_name}. \nRemarks: ${updatedCase.case_remarks}
+      \n\nPlease check the Legal Vault for more details.`
     );
 
     // notifying the client
     sendCaseUpdateNotification(
       client_email,
       "Case Successfully Updated in the BOS' Legal Vault",
-      `Your case, ${ct_name} (${cc_name}), has been successfully updated in our system. Please contact your lawyer for more details.`
+      `Hello ${client_name},\nYour ${ct_name}: ${cc_name} (Case ID: ${updatedCase.case_id}) has been successfully updated in our system. Please contact your lawyer for more details.`
     );
 
     if (!updatedCase) {

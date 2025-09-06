@@ -207,6 +207,14 @@ export const getClientEmailById = async (clientId) => {
   return rows[0] ? rows[0].client_email : null;
 };
 
+export const getClientNameById = async (clientId) => {
+  const queryStr = `
+    SELECT client_fullname FROM client_tbl WHERE client_id = $1;
+  `;
+  const { rows } = await query(queryStr, [clientId]);
+  return rows[0] ? rows[0].client_fullname : null;
+};
+
 export const getCaseCategoryNameById = async (ccId) => {
   const queryStr = `
     SELECT cc_name FROM case_category_tbl WHERE cc_id = $1;
