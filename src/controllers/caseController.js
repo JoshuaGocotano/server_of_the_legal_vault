@@ -108,6 +108,7 @@ export const updateCase = async (req, res) => {
     const updatedCase = await caseServices.updateCase(caseId, caseData);
 
     const user = await caseServices.getUserById(updatedCase.user_id);
+    const updatedBy = await caseServices.getUserById(caseData.last_updated_by); // the one who updated the case
     const cc_name = await caseServices.getCaseCategoryNameById(
       updatedCase.cc_id
     );
@@ -124,10 +125,12 @@ export const updateCase = async (req, res) => {
     admins.forEach((admin) => {
       sendCaseUpdateNotification(
         admin.user_email,
-        "Case Update",
+        "Case Update for Super Lawyer/Admin",
         `An update on ${cc_name}: ${ct_name} (Case ID: ${
           updatedCase.case_id
-        }) \nLawyer: ${user.user_fname} ${
+        }) was done by ${updatedBy.user_fname} ${
+          updatedBy.user_mname ? updatedBy.user_mname : ""
+        } ${updatedBy.user_lname}.\nLawyer: ${user.user_fname} ${
           user.user_mname ? user.user_mname : ""
         } ${user.user_lname}.`
           .replace(/\s+/g, " ")
@@ -138,7 +141,7 @@ export const updateCase = async (req, res) => {
     // notifying the one who updated (lawyer or admin/super lawyer)
     sendCaseUpdateNotification(
       user.user_email,
-      "Case Update",
+      "Case Update for Lawyer",
       `A new update on your ${cc_name}: ${ct_name} of ${client_name}. \nRemarks: ${updatedCase.case_remarks}
       \n\nPlease check the Legal Vault for more details.`
     );
