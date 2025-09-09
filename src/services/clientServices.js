@@ -69,6 +69,7 @@ export const updateClient = async (clientId, clientData) => {
     client_phonenum,
     client_password,
     client_status,
+    client_last_updated_by,
   } = clientData;
 
   let hashedPassword = null;
@@ -83,13 +84,14 @@ export const updateClient = async (clientId, clientData) => {
   }
 
   const { rows } = await query(
-    "UPDATE client_tbl SET client_fullname = $1, client_email = $2, client_phonenum = $3, client_password = $4, client_status = $5 WHERE client_id = $6 RETURNING *",
+    "UPDATE client_tbl SET client_fullname = $1, client_email = $2, client_phonenum = $3, client_password = $4, client_status = $5, client_last_updated_by = $6 WHERE client_id = $7 RETURNING *",
     [
       client_fullname,
       client_email,
       client_phonenum,
       hashedPassword,
       client_status,
+      client_last_updated_by,
       clientId,
     ]
   );
