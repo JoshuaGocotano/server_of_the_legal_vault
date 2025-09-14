@@ -28,9 +28,24 @@ export const getDocumentById = async (req, res) => {
 
 // Creating a New Document
 export const createDocument = async (req, res) => {
-  const data = req.body;
   try {
-    const newDocument = await documentService.createDocument(data);
+    const { doc_type } = req.body;
+
+    let doc_file = null;
+    if (req.file) {
+      if (doc_type === "Task") {
+        doc_file = `/uploads/taskDocs/${req.file.filename}`;
+      } else if (doc_type === "Supporting") {
+        doc_file = `/uploads/supportingDocs/${req.file.filename}`;
+      }
+    }
+
+    const docData = {
+      ...req.body,
+      doc_file,
+    };
+
+    const newDocument = await documentService.createDocument(docData);
     res.status(201).json(newDocument);
   } catch (err) {
     console.error("Error creating document", err);

@@ -22,9 +22,6 @@ export const getDocumentById = async (docId) => {
 };
 
 // Create a new document
-// Create a new document according to schema in database_design_for_legal_vault.txt
-// Required minimal fields based on schema: doc_name, doc_type
-// Other fields are optional and can be null
 export const createDocument = async (docData) => {
   const {
     doc_name,
@@ -47,6 +44,10 @@ export const createDocument = async (docData) => {
     throw new Error("doc_name and doc_type are required");
   }
 
+  const hashedPassword = doc_password
+    ? await bcrypt.hash(doc_password.toString(), saltRounds)
+    : null;
+  
   const queryStr = `
     INSERT INTO document_tbl (
       doc_name, doc_type, doc_description, doc_task, doc_file,
@@ -69,7 +70,7 @@ export const createDocument = async (docData) => {
     doc_due_date,
     doc_status,
     doc_tag,
-    doc_password,
+    hashedPassword,
     doc_tasked_to,
     doc_tasked_by,
     doc_submitted_by,
