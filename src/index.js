@@ -8,6 +8,7 @@ import branchRoutes from "./routes/branchRoute.js";
 import clientRoutes from "./routes/clientRoute.js";
 import caseRoutes from "./routes/caseRoute.js";
 import paymentRoutes from "./routes/paymentRoute.js";
+import documentRoutes from "./routes/documentRoutes.js";
 
 const app = express();
 const port = 3000;
@@ -18,7 +19,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "http://localhost:4000",
-    methods: ["GET", "POST", "PUT", "DELETE",],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
@@ -29,8 +30,17 @@ app.use("/api", clientRoutes);
 app.use("/api", authRoutes); // authentication api
 app.use("/api", caseRoutes);
 app.use("/api", paymentRoutes);
+app.use("/api", documentRoutes);
 
 app.use("/uploads", express.static("D:/Capstone_ni_Angelie/uploads")); // user profile uploads
+app.use(
+  "/uploads/taskedDocs",
+  express.static("D:/Capstone_ni_Angelie/uploads/taskedDocs")
+); // tasked document uploads
+app.use(
+  "/uploads/supportingDocs",
+  express.static("D:/Capstone_ni_Angelie/uploads/supportingDocs")
+); // supporting document uploads
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Listening on port ${port}`);
