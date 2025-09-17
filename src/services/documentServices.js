@@ -21,6 +21,15 @@ export const getDocumentById = async (docId) => {
   return rows[0];
 };
 
+// Get documents by Case ID
+export const getDocumentsByCaseId = async (caseId) => {
+  const { rows } = await query(
+    "SELECT * FROM document_tbl WHERE case_id = $1 ORDER BY doc_id ASC",
+    [caseId]
+  );
+  return rows;
+};
+
 // Create a new document
 export const createDocument = async (docData) => {
   const {
@@ -47,7 +56,7 @@ export const createDocument = async (docData) => {
   const hashedPassword = doc_password
     ? await bcrypt.hash(doc_password.toString(), saltRounds)
     : null;
-  
+
   const queryStr = `
     INSERT INTO document_tbl (
       doc_name, doc_type, doc_description, doc_task, doc_file,

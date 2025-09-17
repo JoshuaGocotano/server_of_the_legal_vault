@@ -45,6 +45,11 @@ const upload = multer({
 
 router.get("/documents", verifyUser, documentController.getDocuments);
 router.get("/documents/:id", verifyUser, documentController.getDocumentById);
+router.get(
+  "/case/documents/:caseId",
+  verifyUser,
+  documentController.getDocumentsByCaseId
+);
 router.post(
   "/documents",
   verifyUser,
