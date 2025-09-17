@@ -26,6 +26,18 @@ export const getDocumentById = async (req, res) => {
   }
 };
 
+// Fetch documents by Case ID
+export const getDocumentsByCaseId = async (req, res) => {
+  const { caseId } = req.params;
+  try {
+    const documents = await documentService.getDocumentsByCaseId(caseId);
+    res.status(200).json(documents);
+  } catch (err) {
+    console.error("Error fetching documents by Case ID", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // Creating a New Document
 export const createDocument = async (req, res) => {
   try {
