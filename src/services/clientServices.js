@@ -153,10 +153,18 @@ export const createClientContact = async (contactData) => {
     contact_phone,
     contact_role,
     client_id,
+    contact_created_by,
   } = contactData;
   const { rows } = await query(
-    "INSERT INTO client_contact_tbl (contact_fullname, contact_email, contact_phone, contact_role, client_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-    [contact_fullname, contact_email, contact_phone, contact_role, client_id]
+    "INSERT INTO client_contact_tbl (contact_fullname, contact_email, contact_phone, contact_role, client_id, contact_created_by) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+    [
+      contact_fullname,
+      contact_email,
+      contact_phone,
+      contact_role,
+      client_id,
+      contact_created_by,
+    ]
   );
   return rows[0];
 };
