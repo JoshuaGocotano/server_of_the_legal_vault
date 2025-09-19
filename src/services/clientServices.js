@@ -156,7 +156,7 @@ export const createClientContact = async (contactData) => {
     contact_created_by,
   } = contactData;
   const { rows } = await query(
-    "INSERT INTO client_contact_tbl (contact_fullname, contact_email, contact_phone, contact_role, client_id, contact_created_by) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+    "INSERT INTO client_contact_tbl (contact_fullname, contact_email, contact_phone, contact_role, client_id, contact_created_by, contact_status) VALUES ($1, $2, $3, $4, $5, $6, 'Active') RETURNING *",
     [
       contact_fullname,
       contact_email,
