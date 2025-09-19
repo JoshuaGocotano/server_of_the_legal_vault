@@ -49,7 +49,6 @@ router.put(
 router.delete(
   "/client-contacts/:contact_id",
   verifyUser,
-  requireAdmin,
   clientController.deleteClientContactById
 );
 router.get(
