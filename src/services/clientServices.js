@@ -122,7 +122,7 @@ export const searchClients = async (searchTerm) => {
 export const getClientContacts = async () => {
   const { rows } = await query(
     `SELECT * FROM client_contact_tbl, client_tbl
-    WHERE client_contact_tbl.client_id = client_tbl.client_id AND client_tbl.client_status != 'Removed'`
+    WHERE client_contact_tbl.client_id = client_tbl.client_id AND client_tbl.client_status != 'Removed' AND client_contact_tbl.contact_status != 'Removed'`
   );
   return rows;
 };
@@ -178,9 +178,10 @@ export const updateClientContact = async (contact_id, contactData) => {
     contact_role,
     client_id,
     contact_updated_by,
+    contact_status,
   } = contactData;
   const { rows } = await query(
-    "UPDATE client_contact_tbl SET contact_fullname = $1, contact_email = $2, contact_phone = $3, contact_role = $4, client_id = $5, contact_updated_by = $6 WHERE contact_id = $7 RETURNING *",
+    "UPDATE client_contact_tbl SET contact_fullname = $1, contact_email = $2, contact_phone = $3, contact_role = $4, client_id = $5, contact_updated_by = $6, contact_status = $7 WHERE contact_id = $8 RETURNING *",
     [
       contact_fullname,
       contact_email,
@@ -188,6 +189,7 @@ export const updateClientContact = async (contact_id, contactData) => {
       contact_role,
       client_id,
       contact_updated_by,
+      contact_status,
       contact_id,
     ]
   );
