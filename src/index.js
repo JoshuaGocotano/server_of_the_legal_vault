@@ -12,6 +12,7 @@ import documentRoutes from "./routes/documentRoute.js";
 import notificationRoutes from "./routes/notificationRoute.js";
 
 import requireAdminOrLawyer from "./middleware/requireAdminOrLawyer.js";
+import verifyUser from "./middleware/verifyUser.js";
 
 const app = express();
 const port = 3000;
@@ -40,11 +41,13 @@ app.use("/api", notificationRoutes);
 // the generic static will serve files and bypass the role middleware.
 app.use(
   "/uploads/taskedDocs",
+  verifyUser,
   requireAdminOrLawyer,
   express.static("D:/Capstone_ni_Angelie/uploads/taskedDocs")
 ); // tasked document uploads (restricted)
 app.use(
   "/uploads/supportingDocs",
+  verifyUser,
   requireAdminOrLawyer,
   express.static("D:/Capstone_ni_Angelie/uploads/supportingDocs")
 ); // supporting document uploads (restricted)
