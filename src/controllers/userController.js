@@ -13,6 +13,17 @@ export const getUsers = async (req, res) => {
   }
 };
 
+// for dashboard user count
+export const countUsers = async (req, res) => {
+  try {
+    const count = await userService.countUsers();
+    res.status(200).json({ count: parseInt(count, 10) });
+  } catch (err) {
+    console.error("Error counting users", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // Adding a user
 export const createUser = async (req, res) => {
   try {
@@ -118,7 +129,7 @@ export const getUserLogsById = async (req, res) => {
   }
 };
 
-// -------------------- CONTROLLER FOR LAWYERS' CASE SPECIALTIES 
+// -------------------- CONTROLLER FOR LAWYERS' CASE SPECIALTIES
 
 export const getLawyersByCaseCategoryTypes = async (req, res) => {
   try {
@@ -129,5 +140,3 @@ export const getLawyersByCaseCategoryTypes = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-

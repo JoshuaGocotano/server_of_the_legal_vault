@@ -11,6 +11,12 @@ export const getUsers = async () => {
   return rows;
 };
 
+// for dashboard user count
+export const countUsers = async () => {
+  const { rows } = await query("SELECT COUNT(*) FROM user_tbl");
+  return rows[0].count;
+};
+
 // Adding a New User
 export const createUser = async (userData) => {
   const {
