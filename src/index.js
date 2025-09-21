@@ -34,14 +34,14 @@ app.use("/api", paymentRoutes);
 app.use("/api", documentRoutes);
 app.use("/api", notificationRoutes);
 
-app.use("/uploads", express.static("D:/Capstone_ni_Angelie/uploads")); // user profile uploads
+app.use("/uploads", express.static("C:/Users/Noel Batoctoy/caps/uploads")); // user profile uploads
 app.use(
   "/uploads/taskedDocs",
-  express.static("D:/Capstone_ni_Angelie/uploads/taskedDocs")
+  express.static("C:/Users/Noel Batoctoy/caps/uploads/taskedDocs")
 ); // tasked document uploads
 app.use(
   "/uploads/supportingDocs",
-  express.static("D:/Capstone_ni_Angelie/uploads/supportingDocs")
+  express.static("C:/Users/Noel Batoctoy/caps/uploads/supportingDocs")
 ); // supporting document uploads
 
 app.listen(port, "0.0.0.0", () => {

@@ -13,9 +13,9 @@ const router = express.Router();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const docType = req.body.doc_type;
-    let uploadPath = "D:/Capstone_ni_Angelie/uploads";
+    let uploadPath = "C:/Users/Noel Batoctoy/caps/uploads";
     if (docType === "Task") {
-      uploadPath += "/taskDocs";
+      uploadPath += "/taskedDocs";
     } else if (docType === "Supporting") {
       uploadPath += "/supportingDocs";
     }
