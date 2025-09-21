@@ -11,6 +11,8 @@ import paymentRoutes from "./routes/paymentRoute.js";
 import documentRoutes from "./routes/documentRoute.js";
 import notificationRoutes from "./routes/notificationRoute.js";
 
+import requireAdminOrLawyer from "./middleware/requireAdminOrLawyer.js";
+
 const app = express();
 const port = 3000;
 
@@ -34,15 +36,21 @@ app.use("/api", paymentRoutes);
 app.use("/api", documentRoutes);
 app.use("/api", notificationRoutes);
 
-app.use("/uploads", express.static("D:/Capstone_ni_Angelie/uploads")); // user profile uploads
+// IMPORTANT: mount restricted subpaths BEFORE the generic /uploads static, otherwise
+// the generic static will serve files and bypass the role middleware.
 app.use(
   "/uploads/taskedDocs",
+  requireAdminOrLawyer,
   express.static("D:/Capstone_ni_Angelie/uploads/taskedDocs")
-); // tasked document uploads
+); // tasked document uploads (restricted)
 app.use(
   "/uploads/supportingDocs",
+  requireAdminOrLawyer,
   express.static("D:/Capstone_ni_Angelie/uploads/supportingDocs")
-); // supporting document uploads
+); // supporting document uploads (restricted)
+
+// Keep a generic uploads static for non-sensitive assets (e.g., profile images)
+app.use("/uploads", express.static("D:/Capstone_ni_Angelie/uploads"));
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Listening on port ${port}`);
