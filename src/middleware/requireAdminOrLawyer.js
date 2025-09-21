@@ -1,6 +1,9 @@
 // restriction middleware for Admin or Lawyer roles
 const requireAdminOrLawyer = (req, res, next) => {
-  if (req.user?.user_role !== "Admin" && req.user?.user_role !== "Lawyer") {
+  const role = (req.user?.user_role || "").toLowerCase();
+  const isAllowed = role.includes("admin") || role.includes("lawyer");
+
+  if (!isAllowed) {
     return res
       .status(403)
       .json({ error: "Access denied. Admins or Lawyers only." });
