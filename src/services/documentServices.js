@@ -34,7 +34,7 @@ export const getDocumentsByCaseId = async (caseId) => {
 export const createDocument = async (docData) => {
   const {
     doc_name,
-    doc_type, // "Supporting Document" | "Task Document"
+    doc_type, // "Support Document" | "Task Document"
     doc_description = null,
     doc_task = null,
     doc_file = null,
@@ -46,6 +46,7 @@ export const createDocument = async (docData) => {
     doc_tasked_to = null,
     doc_tasked_by = null,
     doc_submitted_by = null,
+    doc_reference = null,
     case_id = null,
   } = docData;
 
@@ -61,11 +62,11 @@ export const createDocument = async (docData) => {
     INSERT INTO document_tbl (
       doc_name, doc_type, doc_description, doc_task, doc_file,
       doc_prio_level, doc_due_date, doc_status, doc_tag, doc_password,
-      doc_tasked_to, doc_tasked_by, doc_submitted_by, case_id
+      doc_tasked_to, doc_tasked_by, doc_submitted_by, doc_reference, case_id
     ) VALUES (
       $1, $2, $3, $4, $5,
       $6, $7, $8, $9, $10,
-      $11, $12, $13, $14
+      $11, $12, $13, $14, $15
     ) RETURNING *;
   `;
 
@@ -83,6 +84,7 @@ export const createDocument = async (docData) => {
     doc_tasked_to,
     doc_tasked_by,
     doc_submitted_by,
+    doc_reference,
     case_id,
   ];
 

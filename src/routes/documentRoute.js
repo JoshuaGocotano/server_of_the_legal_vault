@@ -14,10 +14,13 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const docType = req.body.doc_type;
     let uploadPath = "D:/Capstone_ni_Angelie/uploads";
+
     if (docType === "Task") {
-      uploadPath += "/taskDocs";
+      uploadPath += "/taskedDocs";
     } else if (docType === "Supporting") {
       uploadPath += "/supportingDocs";
+    } else if (file.fieldname === "doc_reference") {
+      uploadPath += "/referenceDocs";
     }
 
     cb(null, uploadPath);
@@ -43,17 +46,23 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
 });
 
-router.get("/documents", verifyUser, documentController.getDocuments);
+const uploadFields = upload.fields([
+  { name: "doc_file", maxCount: 1 },
+  { name: "doc_reference", maxCount: 10 },
+]);
+
+router.get("/documents", documentController.getDocuments);
 router.get("/documents/:id", verifyUser, documentController.getDocumentById);
 router.get(
   "/case/documents/:caseId",
   verifyUser,
   documentController.getDocumentsByCaseId
 );
+
 router.post(
   "/documents",
   verifyUser,
-  upload.single("doc_file"),
+  uploadFields,
   documentController.createDocument
 );
 

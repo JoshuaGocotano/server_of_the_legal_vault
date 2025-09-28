@@ -41,26 +41,25 @@ export const getDocumentsByCaseId = async (req, res) => {
 // Creating a New Document
 export const createDocument = async (req, res) => {
   try {
-    const { doc_type } = req.body;
+    const mainFile = req.files["doc_file"] ? req.files["doc_file"][0].filename : null;
+    const references = req.files["doc_reference"] 
+      ? req.files["doc_reference"].map(f => f.filename) 
+      : [];
 
-    let doc_file = null;
-    if (req.file) {
-      if (doc_type === "Task") {
-        doc_file = `/uploads/taskDocs/${req.file.filename}`;
-      } else if (doc_type === "Supporting") {
-        doc_file = `/uploads/supportingDocs/${req.file.filename}`;
-      }
-    }
-
+    // Save to DB
     const docData = {
       ...req.body,
-      doc_file,
+      doc_file: mainFile ? `/uploads/${req.body.doc_type === "Tasked" ? "taskedDocs" : "supportingDocs"}/${mainFile}` : null,
+      doc_reference: references.length ? JSON.stringify(references.map(f => `/uploads/referenceDocs/${f}`)) : null
     };
 
-    const newDocument = await documentService.createDocument(docData);
-    res.status(201).json(newDocument);
+    // Call your service/DB insert
+    const newDoc = await documentService.createDocument(docData);
+
+    res.status(201).json(newDoc);
   } catch (err) {
-    console.error("Error creating document", err);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error creating document:", err);
+    res.status(500).json({ error: "Failed to create document" });
   }
 };
+
