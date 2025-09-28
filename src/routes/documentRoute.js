@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 
     if (docType === "Task") {
       uploadPath += "/taskedDocs";
-    } else if (docType === "Supporting") {
+    } else if (docType === "Support") {
       uploadPath += "/supportingDocs";
     } else if (file.fieldname === "doc_reference") {
       uploadPath += "/referenceDocs";
