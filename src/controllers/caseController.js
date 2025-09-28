@@ -41,6 +41,28 @@ export const getCasesByUserId = async (req, res) => {
   }
 };
 
+export const countProcessingCases = async (req, res) => {
+  try {
+    const count = await caseServices.countProcessingCases();
+    res.status(200).json({ count: parseInt(count, 10) });
+  } catch (err) {
+    console.error("Error counting processing cases", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const countProcessingCasesByUserId = async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+    const cases = await caseServices.getCasesByUserId(userId);
+    const processingCount = cases.filter((c) => c.case_status === "Processing").length;
+    res.status(200).json({ count: processingCount });
+  } catch (err) {
+    console.error("Error counting processing cases by user ID", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 export const createCase = async (req, res) => {
   try {
     const caseData = req.body;
