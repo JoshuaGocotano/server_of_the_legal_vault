@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
     let uploadPath = "C:/Users/Noel Batoctoy/caps/uploads";
 
     if (docType === "Task") {
-      uploadPath += "/taskededDocs";
+      uploadPath += "/taskedDocs";
     } else if (docType === "Support") {
       uploadPath += "/supportingDocs";
     } else if (file.fieldname === "doc_reference") {
