@@ -34,6 +34,7 @@ export const getClientsByLawyerId = async (userId) => {
 export const createClient = async (clientData) => {
   const {
     client_fullname,
+    client_address,
     client_email,
     client_phonenum,
     created_by,
@@ -48,9 +49,10 @@ export const createClient = async (clientData) => {
   );
 
   const { rows } = await query(
-    "INSERT INTO client_tbl (client_fullname, client_email, client_phonenum, created_by, client_password, client_status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+    "INSERT INTO client_tbl (client_fullname, client_address, client_email, client_phonenum, created_by, client_password, client_status) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
     [
       client_fullname,
+      client_address,
       client_email,
       client_phonenum,
       created_by,
@@ -65,6 +67,7 @@ export const createClient = async (clientData) => {
 export const updateClient = async (clientId, clientData) => {
   const {
     client_fullname,
+    client_address,
     client_email,
     client_phonenum,
     client_password,
@@ -84,9 +87,10 @@ export const updateClient = async (clientId, clientData) => {
   }
 
   const { rows } = await query(
-    "UPDATE client_tbl SET client_fullname = $1, client_email = $2, client_phonenum = $3, client_password = $4, client_status = $5, client_last_updated_by = $6 WHERE client_id = $7 RETURNING *",
+    "UPDATE client_tbl SET client_fullname = $1, client_address = $2, client_email = $3, client_phonenum = $4, client_password = $5, client_status = $6, client_last_updated_by = $7 WHERE client_id = $8 RETURNING *",
     [
       client_fullname,
+      client_address,
       client_email,
       client_phonenum,
       hashedPassword,
@@ -110,7 +114,7 @@ export const deleteClientById = async (clientId) => {
 // Searching for a client
 export const searchClients = async (searchTerm) => {
   const { rows } = await query(
-    "SELECT * FROM client_tbl WHERE client_fullname ILIKE $1 OR client_email ILIKE $1 OR client_phonenum ILIKE $1",
+    "SELECT * FROM client_tbl WHERE client_fullname ILIKE $1 OR client_email ILIKE $1 OR client_phonenum ILIKE $1 OR client_address ILIKE $1",
     [`%${searchTerm}%`]
   );
   return rows;
@@ -149,6 +153,7 @@ export const getLawyersClientContacts = async (lawyerUserId) => {
 export const createClientContact = async (contactData) => {
   const {
     contact_fullname,
+    contact_address,
     contact_email,
     contact_phone,
     contact_role,
@@ -156,9 +161,10 @@ export const createClientContact = async (contactData) => {
     contact_created_by,
   } = contactData;
   const { rows } = await query(
-    "INSERT INTO client_contact_tbl (contact_fullname, contact_email, contact_phone, contact_role, client_id, contact_created_by, contact_status) VALUES ($1, $2, $3, $4, $5, $6, 'Active') RETURNING *",
+    "INSERT INTO client_contact_tbl (contact_fullname, contact_address, contact_email, contact_phone, contact_role, client_id, contact_created_by, contact_status) VALUES ($1, $2, $3, $4, $5, $6, $7, 'Active') RETURNING *",
     [
       contact_fullname,
+      contact_address,
       contact_email,
       contact_phone,
       contact_role,
@@ -173,6 +179,7 @@ export const createClientContact = async (contactData) => {
 export const updateClientContact = async (contact_id, contactData) => {
   const {
     contact_fullname,
+    contact_address,
     contact_email,
     contact_phone,
     contact_role,
@@ -181,9 +188,10 @@ export const updateClientContact = async (contact_id, contactData) => {
     contact_status,
   } = contactData;
   const { rows } = await query(
-    "UPDATE client_contact_tbl SET contact_fullname = $1, contact_email = $2, contact_phone = $3, contact_role = $4, client_id = $5, contact_updated_by = $6, contact_status = $7 WHERE contact_id = $8 RETURNING *",
+    "UPDATE client_contact_tbl SET contact_fullname = $1, contact_address = $2, contact_email = $3, contact_phone = $4, contact_role = $5, client_id = $6, contact_updated_by = $7, contact_status = $8 WHERE contact_id = $9 RETURNING *",
     [
       contact_fullname,
+      contact_address,
       contact_email,
       contact_phone,
       contact_role,
@@ -208,7 +216,7 @@ export const deleteClientContactById = async (contact_id) => {
 // searching for client contacts
 export const searchClientContacts = async (searchTerm) => {
   const { rows } = await query(
-    "SELECT * FROM client_contact_tbl WHERE contact_fullname ILIKE $1 OR contact_email ILIKE $1 OR contact_phone ILIKE $1",
+    "SELECT * FROM client_contact_tbl WHERE contact_fullname ILIKE $1 OR contact_email ILIKE $1 OR contact_phone ILIKE $1 OR contact_address ILIKE $1",
     [`%${searchTerm}%`]
   );
   return rows;
