@@ -10,7 +10,7 @@ const router = express.Router();
 // Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "C:/Users/Noel Batoctoy/caps/uploads/profile_pictures");
+    cb(null, "D:/Capstone_ni_Angelie/uploads/profile_pictures");
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);

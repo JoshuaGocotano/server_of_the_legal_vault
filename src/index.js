@@ -43,17 +43,17 @@ app.use(
   "/uploads/taskedDocs",
   verifyUser,
   requireAdminOrLawyer,
-  express.static("C:/Users/Noel Batoctoy/caps/uploads/taskedDocs")
+  express.static("D:/Capstone_ni_Angelie/uploads/taskedDocs")
 ); // tasked document uploads (restricted)
 app.use(
   "/uploads/supportingDocs",
   verifyUser,
   requireAdminOrLawyer,
-  express.static("C:/Users/Noel Batoctoy/caps/uploads/supportingDocs")
+  express.static("D:/Capstone_ni_Angelie/uploads/supportingDocs")
 ); // supporting document uploads (restricted)
 
 // Keep a generic uploads static for non-sensitive assets (e.g., profile images)
-app.use("/uploads", express.static("C:/Users/Noel Batoctoy/caps/uploads"));
+app.use("/uploads", express.static("D:/Capstone_ni_Angelie/uploads"));
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Listening on port ${port}`);
