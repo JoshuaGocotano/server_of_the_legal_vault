@@ -43,12 +43,11 @@ export const createClient = async (clientData) => {
   } = clientData;
 
   // Hashing here
-  if (!client_password) {
-    const hashedPassword = await bcrypt.hash(
-      client_password.toString(),
-      saltRounds
-    );
-    client_password = hashedPassword;
+  let hashedPassword = null;
+  if (client_password) {
+    hashedPassword = await bcrypt.hash(client_password.toString(), saltRounds);
+  } else {
+    hashedPassword = null;
   }
 
   const { rows } = await query(
@@ -59,7 +58,7 @@ export const createClient = async (clientData) => {
       client_email,
       client_phonenum,
       created_by,
-      client_password,
+      hashedPassword,
       client_status,
     ]
   );
