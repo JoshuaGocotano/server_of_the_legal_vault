@@ -19,7 +19,6 @@ router.get(
 router.get(
   "/cases/count/archived",
   verifyUser,
-  requireAdminOrLawyer,
   caseController.countArchivedCases
 ); // Count all archived cases - admins and lawyers only
 router.get(
