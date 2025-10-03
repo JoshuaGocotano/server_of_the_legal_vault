@@ -52,13 +52,20 @@ export const getCasesByUserId = async (userId) => {
   return rows;
 };
 
-// counting all processing cases
+// counting all processing cases for dashboard
 export const countProcessingCases = async () => {
   const { rows } = await query(
     `SELECT COUNT(*) FROM case_tbl WHERE case_status = 'Processing'`
   );
   return rows[0].count;
 };
+
+export const countArchivedCases = async () => {
+  const { rows } = await query(
+    `SELECT COUNT(*) FROM case_tbl WHERE case_status = 'Archived'`
+  );
+  return rows[0].count;
+}
 
 // Creating a New Case
 export const createCase = async (caseData) => {

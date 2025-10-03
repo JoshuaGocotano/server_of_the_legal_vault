@@ -55,10 +55,36 @@ export const countProcessingCasesByUserId = async (req, res) => {
   try {
     const userId = req.params.user_id;
     const cases = await caseServices.getCasesByUserId(userId);
-    const processingCount = cases.filter((c) => c.case_status === "Processing").length;
+    const processingCount = cases.filter(
+      (c) => c.case_status === "Processing"
+    ).length;
     res.status(200).json({ count: processingCount });
   } catch (err) {
     console.error("Error counting processing cases by user ID", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const countArchivedCases = async (req, res) => {
+  try {
+    const count = await caseServices.countArchivedCases();
+    res.status(200).json({ count: parseInt(count, 10) });
+  } catch (err) {
+    console.error("Error counting archived cases", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const countArchivedCasesByUserId = async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+    const cases = await caseServices.getCasesByUserId(userId);
+    const archivedCount = cases.filter(
+      (c) => c.case_status === "Archived"
+    ).length;
+    res.status(200).json({ count: archivedCount });
+  } catch (err) {
+    console.error("Error counting archived cases by user ID", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
