@@ -12,6 +12,7 @@ export const getCases = async () => {
     LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
     LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
     LEFT JOIN branch_tbl b ON u.branch_id = b.branch_id
+    WHERE c.case_status != 'Archived'
     ORDER BY c.case_date_created DESC;
   `;
   const { rows } = await query(queryStr);
@@ -27,7 +28,7 @@ export const getCaseById = async (caseId) => {
     LEFT JOIN client_tbl cl ON c.client_id = cl.client_id
     LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
     LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
-    WHERE c.case_id = $1
+    WHERE c.case_id = $1 AND c.case_status != 'Archived'
     ORDER BY c.case_date_created DESC;
   `;
   const { rows } = await query(queryStr, [caseId]);
@@ -44,7 +45,7 @@ export const getCasesByUserId = async (userId) => {
     LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
     LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
     LEFT JOIN branch_tbl b ON u.branch_id = b.branch_id
-    WHERE c.user_id = $1 OR c.user_id IS NULL
+    WHERE (c.user_id = $1 OR c.user_id IS NULL) AND c.case_status != 'Archived'
     ORDER BY c.case_date_created DESC;
   `;
   const { rows } = await query(queryStr, [userId]);
