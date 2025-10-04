@@ -32,21 +32,57 @@ router.post("/login", async (req, res) => {
         .json({ error: "Account is suspended. Try to contact the admin." });
     }
 
-    // Generate OTP and expiry
-    const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
-    const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
+    // if user_is_verified is false, generate and send OTP
+    if (!user.user_is_verified) {
+      // Generate OTP and expiry
+      const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+      const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
 
-    await query(
-      `UPDATE user_tbl SET user_otp = $1, user_otp_expiry = $2 WHERE user_id = $3`,
-      [otp, otpExpiry, user.user_id]
-    );
+      await query(
+        `UPDATE user_tbl SET user_otp = $1, user_otp_expiry = $2 WHERE user_id = $3`,
+        [otp, otpExpiry, user.user_id]
+      );
 
-    // await sendVerificationCode(user.user_email, otp);
+      // await sendVerificationCode(user.user_email, otp);
 
-    res.json({
-      message: "OTP sent to your email",
-      user_id: user.user_id,
-    });
+      res.json({
+        message: "OTP sent to your email",
+        user_id: user.user_id,
+      });
+    } else {
+      // If already verified, proceed to login
+      const token = jwt.sign(
+        {
+          user_id: user.user_id,
+          user_role: user.user_role,
+          user_fname: user.user_fname,
+          user_mname: user.user_mname,
+          user_lname: user.user_lname,
+          user_profile: user.user_profile,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" }
+      );
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "Lax",
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
+      // // For logging user login activity
+      // await query(
+      //   `INSERT INTO user_log_tbl (user_log_action, user_log_type, user_ip_address, user_id, user_fullname, user_profile) VALUES ('Login', 'User Log', $1, $2, $3, $4)`,
+      //   [
+      //     req.ip,
+      //     user.user_id,
+      //     `${user.user_fname} ${user.user_mname} ${user.user_lname}`,
+      //     user.user_profile,
+      //   ]
+      // );
+      delete user.user_password;
+      res.json({ user });
+    }
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ error: "Internal server error" });
