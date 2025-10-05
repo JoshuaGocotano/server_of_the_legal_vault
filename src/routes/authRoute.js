@@ -227,10 +227,12 @@ router.post("/logout", verifyUser, async (req, res) => {
     // );
 
     // Mark user as not verified
-    await query(
-      `UPDATE user_tbl SET user_is_verified = false WHERE user_id = $1`,
-      [req.user.user_id]
-    );
+    // await query(
+    //   `UPDATE user_tbl SET user_is_verified = false WHERE user_id = $1`,
+    //   [req.user.user_id]
+    // );
+
+    console.log("User logged out:", req.user.user_id);
   } catch (err) {
     console.error("Logout log or update error:", err);
   }
