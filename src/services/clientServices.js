@@ -5,10 +5,25 @@ import { query } from "../db.js";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
-// Fetching clients (The only ones that are not Removed)
 export const getClients = async () => {
   const { rows } = await query(
-    "SELECT * FROM client_tbl WHERE client_status = 'Active' or client_status = 'Inactive' ORDER BY client_id ASC"
+    `
+    SELECT DISTINCT ON (c.client_id)
+      c.client_id,
+      c.client_fullname,
+      c.client_email,
+      c.client_phonenum,
+      c.client_status,
+      c.created_by,
+      c.client_date_created,
+      c.client_address,
+      c.client_last_updated_by,
+      cs.user_id AS user_id
+    FROM client_tbl c
+    LEFT JOIN case_tbl cs ON c.client_id = cs.client_id
+    WHERE c.client_status IN ('Active', 'Inactive')
+    ORDER BY c.client_id, cs.user_id ASC;
+    `
   );
   return rows;
 };
@@ -16,7 +31,22 @@ export const getClients = async () => {
 // Fetching ALL Clients (with those Removed)
 export const getAllClients = async () => {
   const { rows } = await query(
-    "SELECT * FROM client_tbl ORDER BY client_id ASC"
+    `
+    SELECT DISTINCT ON (c.client_id)
+      c.client_id,
+      c.client_fullname,
+      c.client_email,
+      c.client_phonenum,
+      c.client_status,
+      c.created_by,
+      c.client_date_created,
+      c.client_address,
+      c.client_last_updated_by,
+      cs.user_id AS user_id
+    FROM client_tbl c
+    LEFT JOIN case_tbl cs ON c.client_id = cs.client_id
+    ORDER BY c.client_id, cs.user_id ASC;
+    `
   );
   return rows;
 };
@@ -24,7 +54,21 @@ export const getAllClients = async () => {
 // Fetching all clients of a certain lawyer
 export const getClientsByLawyerId = async (userId) => {
   const { rows } = await query(
-    `SELECT * FROM client_tbl WHERE created_by = $1 AND client_status != 'Removed'`,
+    `SELECT DISTINCT 
+        c.client_id,
+        c.client_fullname,
+        c.client_email,
+        c.client_phonenum,
+        c.client_status,
+        c.created_by,
+        c.client_date_created,
+        c.client_address,
+        c.client_last_updated_by,
+        cs.user_id
+      FROM client_tbl c
+      JOIN case_tbl cs ON c.client_id = cs.client_id
+      WHERE cs.user_id = $1
+      AND c.client_status != 'Removed';`,
     [userId]
   );
   return rows;
