@@ -92,6 +92,73 @@ export const createDocument = async (docData) => {
   return rows[0];
 };
 
+// Update a document
+export const updateDocument = async (docId, docData) => {
+  const {
+    doc_name,
+    doc_type,
+    doc_description,
+    doc_task,
+    doc_file,
+    doc_prio_level,
+    doc_due_date,
+    doc_status,
+    doc_tag,
+    doc_password,
+    doc_tasked_to,
+    doc_tasked_by,
+    doc_submitted_by,
+    doc_reference,
+    case_id,
+  } = docData;
+
+  const hashedPassword = doc_password
+    ? await bcrypt.hash(doc_password.toString(), saltRounds)
+    : null;
+  const queryStr = `
+    UPDATE document_tbl SET
+      doc_name = COALESCE($1, doc_name),
+      doc_type = COALESCE($2, doc_type),
+      doc_description = COALESCE($3, doc_description),
+      doc_task = COALESCE($4, doc_task),
+      doc_file = COALESCE($5, doc_file),
+      doc_prio_level = COALESCE($6, doc_prio_level),
+      doc_due_date = COALESCE($7, doc_due_date),
+      doc_status = COALESCE($8, doc_status),
+      doc_tag = COALESCE($9, doc_tag),
+      doc_password = COALESCE($10, doc_password),
+      doc_tasked_to = COALESCE($11, doc_tasked_to),
+      doc_tasked_by = COALESCE($12, doc_tasked_by),
+      doc_submitted_by = COALESCE($13, doc_submitted_by),
+      doc_reference = COALESCE($14, doc_reference),
+      case_id = COALESCE($15, case_id)
+    WHERE doc_id = $16
+    RETURNING *;
+  `;
+
+  const params = [
+    doc_name,
+    doc_type,
+    doc_description,
+    doc_task,
+    doc_file,
+    doc_prio_level,
+    doc_due_date,
+    doc_status,
+    doc_tag,
+    hashedPassword,
+    doc_tasked_to,
+    doc_tasked_by,
+    doc_submitted_by,
+    doc_reference,
+    case_id,
+    docId,
+  ];
+  
+  const { rows } = await query(queryStr, params);
+  return rows[0];
+};
+
 // Delete a document
 export const deleteDocument = async (docId) => {
   const { rows } = await query(

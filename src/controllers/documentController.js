@@ -63,3 +63,32 @@ export const createDocument = async (req, res) => {
   }
 };
 
+// Updating an Existing Document
+export const updateDocument = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedDoc = await documentService.updateDocument(id, req.body);
+    if (!updatedDoc) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+    res.status(200).json(updatedDoc);
+  } catch (err) {
+    console.error("Error updating document:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Deleting a Document
+export const deleteDocument = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleted = await documentService.deleteDocument(id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Document not found" });
+    }
+    res.status(200).json({ message: "Document deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting document:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

@@ -66,4 +66,16 @@ router.post(
   documentController.createDocument
 );
 
+router.put(
+  "/documents/:id",
+  verifyUser,
+  documentController.updateDocument
+);
+
+router.delete(
+  "/documents/:id",
+  verifyUser,
+  documentController.deleteDocument
+);
+
 export default router;
