@@ -267,3 +267,37 @@ export const getCaseCategoryTypes = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const createCaseCategory = async (req, res) => {
+  try {
+    const { cc_name } = req.body;
+    if (!cc_name || !cc_name.trim()) {
+      return res.status(400).json({ message: "Category name is required" });
+    }
+    const created = await caseServices.createCaseCategory(cc_name.trim());
+    res.status(201).json(created);
+  } catch (err) {
+    if (err.code === "ALREADY_EXISTS") {
+      return res.status(409).json({ message: "Category already exists" });
+    }
+    console.error("Error creating case category", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const createCaseType = async (req, res) => {
+  try {
+    const { ct_name, cc_id } = req.body;
+    if (!ct_name || !ct_name.trim()) {
+      return res.status(400).json({ message: "Type name is required" });
+    }
+    const created = await caseServices.createCaseType(ct_name.trim(), cc_id ?? null);
+    res.status(201).json(created);
+  } catch (err) {
+    if (err.code === "ALREADY_EXISTS") {
+      return res.status(409).json({ message: "Type already exists" });
+    }
+    console.error("Error creating case type", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

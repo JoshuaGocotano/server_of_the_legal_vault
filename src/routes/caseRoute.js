@@ -41,5 +41,7 @@ router.get("/cases/:case_id", caseController.getCaseById);
 // Routes for case categories and types
 router.get("/case-categories", caseController.getCaseCategories);
 router.get("/case-category-types", caseController.getCaseCategoryTypes);
+router.post("/case-categories", verifyUser, caseController.createCaseCategory);
+router.post("/case-category-types", verifyUser, caseController.createCaseType);
 
 export default router;

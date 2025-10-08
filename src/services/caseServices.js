@@ -200,6 +200,52 @@ export const getCaseCategoryTypes = async () => {
   return rows;
 };
 
+// helpers and creators for categories and types
+export const findCaseCategoryByName = async (name) => {
+  const { rows } = await query(
+    `SELECT * FROM case_category_tbl WHERE LOWER(cc_name) = LOWER($1) LIMIT 1;`,
+    [name]
+  );
+  return rows[0] || null;
+};
+
+export const findCaseTypeByName = async (name) => {
+  const { rows } = await query(
+    `SELECT * FROM cc_type_tbl WHERE LOWER(ct_name) = LOWER($1) LIMIT 1;`,
+    [name]
+  );
+  return rows[0] || null;
+};
+
+
+export const createCaseCategory = async (cc_name) => {
+  const existing = await findCaseCategoryByName(cc_name);
+  if (existing) {
+    const err = new Error("Category already exists");
+    err.code = "ALREADY_EXISTS";
+    throw err;
+  }
+  const { rows } = await query(
+    `INSERT INTO case_category_tbl (cc_name) VALUES ($1) RETURNING *;`,
+    [cc_name]
+  );
+  return rows[0];
+};
+
+export const createCaseType = async (ct_name, cc_id = null) => {
+  const existing = await findCaseTypeByName(ct_name);
+  if (existing) {
+    const err = new Error("Type already exists");
+    err.code = "ALREADY_EXISTS";
+    throw err;
+  }
+  const { rows } = await query(
+    `INSERT INTO cc_type_tbl (ct_name, cc_id) VALUES ($1, $2) RETURNING *;`,
+    [ct_name, cc_id]
+  );
+  return rows[0];
+};
+
 // other services
 
 export const getAdmins = async () => {
