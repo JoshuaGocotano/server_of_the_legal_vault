@@ -116,5 +116,30 @@ export const countForApprovalDocuments = async (req, res) => {
   }
 };
 
+// Count documents with status "processing" for dashboard
+export const countProcessingDocuments = async (req, res) => {
+  try {
+    const count = await documentService.countProcessingDocuments();
+    res.status(200).json({ count });
+  }
+  catch (err) {
+    console.error("Error counting processing documents:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+// count of pending task documents where the doc_status is "todo"
+export const countPendingTaskDocuments = async (req, res) => {
+  try {
+    const count = await documentService.countPendingTaskDocuments();
+    res.status(200).json({ count });
+  }
+  catch (err) {
+    console.error("Error counting pending task documents:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+
 
 

@@ -9,3 +9,30 @@ export const getBranches = async () => {
   );
   return rows;
 };
+
+// Create a new branch
+export const createBranch = async ({ branch_name }) => {
+  const { rows } = await query(
+    "INSERT INTO branch_tbl (branch_name) VALUES ($1) RETURNING *",
+    [branch_name]
+  );
+  return rows[0];
+};
+
+// Update an existing branch by id
+export const updateBranch = async ({ id, branch_name }) => {
+  const { rows } = await query(
+    "UPDATE branch_tbl SET branch_name = $1 WHERE branch_id = $2 RETURNING *",
+    [branch_name, id]
+  );
+  return rows[0];
+};
+
+// Delete a branch by id
+export const deleteBranch = async (id) => {
+  const { rows } = await query(
+    "DELETE FROM branch_tbl WHERE branch_id = $1 RETURNING *",
+    [id]
+  );
+  return rows[0];
+};

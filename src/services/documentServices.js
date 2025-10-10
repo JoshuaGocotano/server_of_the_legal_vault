@@ -188,3 +188,21 @@ export const countForApprovalDocuments = async () => {
   return rows[0].count;
 };
 
+// count of the processing documents where the status of its case_id is "processing"
+export const countProcessingDocuments = async () => {
+  const { rows } = await query(
+    `SELECT COUNT(*) FROM document_tbl d
+      JOIN case_tbl c ON d.case_id = c.case_id
+      WHERE c.case_status = 'Processing'`
+  );
+  return rows[0].count;
+};
+
+// count of pending task documents where the doc_status is "todo"
+export const countPendingTaskDocuments = async () => {
+  const { rows } = await query(
+    `SELECT COUNT(*) FROM document_tbl WHERE doc_type = 'Task' AND doc_status = 'todo'`
+  );
+  return rows[0].count;
+}
+

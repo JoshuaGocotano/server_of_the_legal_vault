@@ -76,10 +76,21 @@ router.get(
   documentController.searchDocuments
 );
 
+// counts for dashboard
 router.get(
   "/documents/count/for-approval",
   verifyUser,
   documentController.countForApprovalDocuments
+);
+router.get(
+  "/documents/count/processing",
+  verifyUser,
+  documentController.countProcessingDocuments
+);
+router.get(
+  "/documents/count/pending-tasks",
+  verifyUser,
+  documentController.countPendingTaskDocuments
 );
 
 export default router;
