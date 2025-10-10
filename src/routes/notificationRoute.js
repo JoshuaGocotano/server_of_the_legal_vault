@@ -12,4 +12,11 @@ router.get(
   notificationController.getNotifications
 );
 
+// Fetch unread count
+router.get(
+  "/notifications/unread-count",
+  verifyUser,
+  notificationController.getUnreadCount
+);
+
 export default router;

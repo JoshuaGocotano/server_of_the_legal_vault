@@ -34,6 +34,17 @@ export const getClientsByLawyerId = async (req, res) => {
   }
 };
 
+// Client count for dashboard
+export const getClientCount = async (req, res) => {
+  try {
+    const count = await clientService.getClientCount();
+    res.status(200).json({ count });
+  } catch (err) {
+    console.error("Error fetching client count", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // Adding a new client
 export const createClient = async (req, res) => {
   try {

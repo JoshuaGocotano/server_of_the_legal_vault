@@ -66,16 +66,20 @@ router.post(
   documentController.createDocument
 );
 
-router.put(
-  "/documents/:id",
+router.put("/documents/:id", verifyUser, documentController.updateDocument);
+
+router.delete("/documents/:id", verifyUser, documentController.deleteDocument);
+
+router.get(
+  "/documents/search/:query",
   verifyUser,
-  documentController.updateDocument
+  documentController.searchDocuments
 );
 
-router.delete(
-  "/documents/:id",
+router.get(
+  "/documents/count/for-approval",
   verifyUser,
-  documentController.deleteDocument
+  documentController.countForApprovalDocuments
 );
 
 export default router;

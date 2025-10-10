@@ -179,3 +179,12 @@ export const searchDocuments = async (term) => {
   );
   return rows;
 };
+
+// count for approval documents with status "done" for dashboard
+export const countForApprovalDocuments = async () => {
+  const { rows } = await query(
+    `SELECT COUNT(*) FROM document_tbl WHERE doc_status = 'done'`
+  );
+  return rows[0].count;
+};
+

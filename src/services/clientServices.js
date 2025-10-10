@@ -74,6 +74,14 @@ export const getClientsByLawyerId = async (userId) => {
   return rows;
 };
 
+// Client count for dashboard
+export const getClientCount = async () => {
+  const { rows } = await query(
+    "SELECT COUNT(*) FROM client_tbl WHERE client_status IN ('Active', 'Inactive')"
+  );
+  return rows[0].count;
+};
+
 // Adding a new client
 export const createClient = async (clientData) => {
   const {

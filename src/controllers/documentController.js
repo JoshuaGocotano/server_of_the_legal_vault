@@ -92,3 +92,29 @@ export const deleteDocument = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// Searching Documents
+export const searchDocuments = async (req, res) => {
+  const { query } = req.query;
+  try {
+    const results = await documentService.searchDocuments(query);
+    res.status(200).json(results);
+  } catch (err) {
+    console.error("Error searching documents:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Count documents with status "done" for dashboard
+export const countForApprovalDocuments = async (req, res) => {
+  try {
+    const count = await documentService.countForApprovalDocuments();
+    res.status(200).json({ count });
+  } catch (err) {
+    console.error("Error counting documents for approval:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+
