@@ -1,9 +1,12 @@
 import * as notificationService from "../services/notificationServices.js";
 
 // Fetching All Notifications
-export const getNotifications = async (req, res) => {
+export const getNotificationsByUserId = async (req, res) => {
   try {
-    const notifications = await notificationService.getNotifications();
+    const { user_id } = req.params;
+    const notifications = await notificationService.getNotificationsByUserId(
+      user_id
+    );
     res.status(200).json(notifications);
   } catch (err) {
     console.error("Error fetching notifications", err);
@@ -11,10 +14,11 @@ export const getNotifications = async (req, res) => {
   }
 };
 
-// Get Unread Notification Count
-export const getUnreadCount = async (req, res) => {
+// Get Unread Notification Count of a user
+export const getUnreadCountByUserId = async (req, res) => {
   try {
-    const count = await notificationService.getUnreadCount();
+    const { user_id } = req.params;
+    const count = await notificationService.getUnreadCountByUserId(user_id);
     res.status(200).json({ count });
   } catch (err) {
     console.error("Error fetching unread notification count", err);

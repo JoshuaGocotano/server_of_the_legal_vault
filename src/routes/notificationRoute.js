@@ -7,16 +7,16 @@ import requireAdmin from "../middleware/requireAdmin.js";
 const router = express.Router();
 
 router.get(
-  "/notifications",
+  "/notifications/:user_id",
   verifyUser,
-  notificationController.getNotifications
+  notificationController.getNotificationsByUserId
 );
 
 // Fetch unread count
 router.get(
-  "/notifications/unread-count",
+  "/notifications/unread-count/:user_id",
   verifyUser,
-  notificationController.getUnreadCount
+  notificationController.getUnreadCountByUserId
 );
 
 export default router;
