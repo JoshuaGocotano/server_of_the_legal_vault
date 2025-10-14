@@ -139,6 +139,7 @@ export const updateDocument = async (docId, docData) => {
     doc_tasked_by,
     doc_submitted_by,
     doc_reference,
+    doc_last_updated_by,
     case_id,
   } = docData;
 
@@ -161,8 +162,9 @@ export const updateDocument = async (docId, docData) => {
       doc_tasked_by = COALESCE($12, doc_tasked_by),
       doc_submitted_by = COALESCE($13, doc_submitted_by),
       doc_reference = COALESCE($14, doc_reference),
-      case_id = COALESCE($15, case_id)
-    WHERE doc_id = $16
+      doc_last_updated_by = COALESCE($15, doc_last_updated_by),
+      case_id = COALESCE($16, case_id)
+    WHERE doc_id = $17
     RETURNING *;
   `;
 
@@ -181,6 +183,7 @@ export const updateDocument = async (docId, docData) => {
     doc_tasked_by,
     doc_submitted_by,
     doc_reference,
+    doc_last_updated_by,
     case_id,
     docId,
   ];
