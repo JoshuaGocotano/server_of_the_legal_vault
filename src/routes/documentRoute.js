@@ -58,6 +58,11 @@ router.get(
   verifyUser,
   documentController.getDocumentsByCaseId
 );
+router.get(
+  "/documents/task/user/:userId",
+  verifyUser,
+  documentController.getTaskDocumentsByUser
+);
 
 router.post(
   "/documents",

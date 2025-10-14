@@ -38,6 +38,18 @@ export const getDocumentsByCaseId = async (req, res) => {
   }
 };
 
+// Fetch all task documents assigned to a specific user
+export const getTaskDocumentsByUser = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const documents = await documentService.getTaskDocumentsByUser(userId);
+    res.status(200).json(documents);
+  } catch (err) {
+    console.error("Error fetching task documents by User ID", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // Creating a New Document
 export const createDocument = async (req, res) => {
   try {

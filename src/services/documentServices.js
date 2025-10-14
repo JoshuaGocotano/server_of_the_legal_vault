@@ -30,6 +30,15 @@ export const getDocumentsByCaseId = async (caseId) => {
   return rows;
 };
 
+// Get all task documents assigned to a specific user
+export const getTaskDocumentsByUser = async (userId) => {
+  const { rows } = await query(
+    "SELECT * FROM document_tbl WHERE doc_type = 'Task' AND (doc_tasked_to = $1 OR doc_tasked_by = $1) ORDER BY doc_id ASC",
+    [userId]
+  );
+  return rows;
+};
+
 // Create a new document
 export const createDocument = async (docData) => {
   const {
