@@ -38,6 +38,18 @@ export const getDocumentsByCaseId = async (req, res) => {
   }
 };
 
+// Get documents submitted by a specific user
+export const getDocumentsBySubmitter = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const documents = await documentService.getDocumentsBySubmitter(userId);
+    res.status(200).json(documents);
+  } catch (err) {
+    console.error("Error fetching documents by Submitter ID", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // Fetch all task documents assigned to a specific user
 export const getTaskDocumentsByUser = async (req, res) => {
   const { userId } = req.params;

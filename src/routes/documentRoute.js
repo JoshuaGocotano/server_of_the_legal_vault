@@ -59,6 +59,11 @@ router.get(
   documentController.getDocumentsByCaseId
 );
 router.get(
+  "/documents/submitter/:userId",
+  verifyUser,
+  documentController.getDocumentsBySubmitter
+);  
+router.get(
   "/documents/task/user/:userId",
   verifyUser,
   documentController.getTaskDocumentsByUser

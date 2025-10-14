@@ -8,7 +8,7 @@ const saltRounds = 10;
 // Get all documents
 export const getDocuments = async () => {
   const { rows } = await query(
-    "SELECT * FROM document_tbl ORDER BY doc_id DeSC"
+    "SELECT * FROM document_tbl ORDER BY doc_id DESC"
   );
   return rows;
 };
@@ -30,10 +30,19 @@ export const getDocumentsByCaseId = async (caseId) => {
   return rows;
 };
 
+// Get documents submitted by a specific user
+export const getDocumentsBySubmitter = async (userId) => {
+  const { rows } = await query(
+    "SELECT * FROM document_tbl WHERE doc_submitted_by = $1 ORDER BY doc_id DESC",
+    [userId]
+  );
+  return rows;
+};
+
 // Get all task documents assigned to a specific user
 export const getTaskDocumentsByUser = async (userId) => {
   const { rows } = await query(
-    "SELECT * FROM document_tbl WHERE doc_type = 'Task' AND (doc_tasked_to = $1 OR doc_tasked_by = $1) ORDER BY doc_id ASC",
+    "SELECT * FROM document_tbl WHERE doc_type = 'Task' AND (doc_tasked_to = $1 OR doc_tasked_by = $1) ORDER BY doc_id DESC",
     [userId]
   );
   return rows;
