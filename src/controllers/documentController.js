@@ -11,6 +11,18 @@ export const getDocuments = async (req, res) => {
   }
 };
 
+// Fetching All Documents of Lawyer's Cases
+export const getDocumentsByLawyer = async (req, res) => {
+  const lawyerId = req.user.user_id;
+  try {
+    const documents = await documentService.getDocumentsByLawyer(lawyerId);
+    res.status(200).json(documents);
+  } catch (err) {
+    console.error("Error fetching documents for lawyer", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // Fetching a Single Document by ID
 export const getDocumentById = async (req, res) => {
   const { id } = req.params;

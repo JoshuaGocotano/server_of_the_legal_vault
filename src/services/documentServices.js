@@ -13,6 +13,18 @@ export const getDocuments = async () => {
   return rows;
 };
 
+// Get all documents of lawyer's cases
+export const getDocumentsByLawyer = async (lawyerId) => {
+  const { rows } = await query(
+    `SELECT d.* FROM document_tbl d
+     JOIN case_tbl c ON d.case_id = c.case_id
+      WHERE c.user_id = $1
+      ORDER BY d.doc_id DESC`,
+    [lawyerId]
+  );
+  return rows;
+};
+
 // Get a single document by ID
 export const getDocumentById = async (docId) => {
   const { rows } = await query("SELECT * FROM document_tbl WHERE doc_id = $1", [
@@ -172,7 +184,7 @@ export const updateDocument = async (docId, docData) => {
     case_id,
     docId,
   ];
-  
+
   const { rows } = await query(queryStr, params);
   return rows[0];
 };
@@ -222,5 +234,4 @@ export const countPendingTaskDocuments = async () => {
     `SELECT COUNT(*) FROM document_tbl WHERE doc_type = 'Task' AND doc_status = 'todo'`
   );
   return rows[0].count;
-}
-
+};
