@@ -44,7 +44,9 @@ export const getCasesByUserId = async (userId) => {
     LEFT JOIN case_category_tbl cc ON c.cc_id = cc.cc_id
     LEFT JOIN cc_type_tbl ct ON c.ct_id = ct.ct_id
     LEFT JOIN branch_tbl b ON u.branch_id = b.branch_id
-    WHERE c.user_id = $1 OR c.user_id IS NULL
+    WHERE c.user_id = $1
+      OR ($1 = ANY(c.case_allowed_viewers))
+      OR c.user_id IS NULL
     ORDER BY c.case_date_created DESC;
   `;
   const { rows } = await query(queryStr, [userId]);
@@ -61,10 +63,10 @@ export const countProcessingCases = async () => {
 
 export const countArchivedCases = async () => {
   const { rows } = await query(
-    `SELECT COUNT(*) FROM case_tbl WHERE case_status = 'Archived'`
+    `SELECT COUNT(*) FROM case_tbl WHERE case_status = 'Archived (Completed)' OR case_status = 'Archived (Dismissed)'`
   );
   return rows[0].count;
-}
+};
 
 // Creating a New Case
 export const createCase = async (caseData) => {
@@ -144,7 +146,7 @@ export const updateCase = async (caseId, caseData) => {
     caseId,
   ]);
 
-  return rows[0]; 
+  return rows[0];
 };
 
 // Deleting a Case
@@ -216,7 +218,6 @@ export const findCaseTypeByName = async (name) => {
   );
   return rows[0] || null;
 };
-
 
 export const createCaseCategory = async (cc_name) => {
   const existing = await findCaseCategoryByName(cc_name);
@@ -294,4 +295,32 @@ export const getCaseTypeNameById = async (ctId) => {
   `;
   const { rows } = await query(queryStr, [ctId]);
   return rows[0] ? rows[0].ct_name : null;
+};
+
+// case access services
+
+// Updating allowed viewers for a case (share access)
+export const updateCaseAllowedViewers = async (
+  caseId,
+  allowedViewers = [],
+  updatedBy = null
+) => {
+  // Ensure array of integers or null
+  const viewersArray = Array.isArray(allowedViewers)
+    ? allowedViewers.map((v) => Number(v))
+    : [];
+  const queryStr = `
+    UPDATE case_tbl
+    SET case_allowed_viewers = $1::int[],
+        case_last_updated = NOW(),
+        last_updated_by = $3
+    WHERE case_id = $2
+    RETURNING *;
+  `;
+  const { rows } = await query(queryStr, [
+    viewersArray.length ? viewersArray : null,
+    caseId,
+    updatedBy,
+  ]);
+  return rows[0];
 };

@@ -44,4 +44,7 @@ router.get("/case-category-types", caseController.getCaseCategoryTypes);
 router.post("/case-categories", verifyUser, caseController.createCaseCategory);
 router.post("/case-category-types", verifyUser, caseController.createCaseType);
 
+// share access (allowed viewers for a certain case)
+router.put("/cases/:case_id/share", verifyUser, requireAdminOrLawyer, caseController.shareCaseAccess);
+
 export default router;

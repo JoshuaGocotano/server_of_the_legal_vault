@@ -80,7 +80,9 @@ export const countArchivedCasesByUserId = async (req, res) => {
     const userId = req.params.user_id;
     const cases = await caseServices.getCasesByUserId(userId);
     const archivedCount = cases.filter(
-      (c) => c.case_status === "Archived"
+      (c) =>
+        c.case_status === "Archived (Completed)" ||
+        c.case_status === "Archived (Dismissed)"
     ).length;
     res.status(200).json({ count: archivedCount });
   } catch (err) {
@@ -291,13 +293,46 @@ export const createCaseType = async (req, res) => {
     if (!ct_name || !ct_name.trim()) {
       return res.status(400).json({ message: "Type name is required" });
     }
-    const created = await caseServices.createCaseType(ct_name.trim(), cc_id ?? null);
+    const created = await caseServices.createCaseType(
+      ct_name.trim(),
+      cc_id ?? null
+    );
     res.status(201).json(created);
   } catch (err) {
     if (err.code === "ALREADY_EXISTS") {
       return res.status(409).json({ message: "Type already exists" });
     }
     console.error("Error creating case type", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// case access controller
+
+export const shareCaseAccess = async (req, res) => {
+  try {
+    const caseId = req.params.case_id;
+    const { allowed_viewers = [], updated_by } = req.body;
+
+    // Permission check: only Admins or the assigned lawyer can edit access
+    const currentUser = req.user || {};
+    const record = await caseServices.getCaseById(caseId);
+    if (!record) return res.status(404).json({ message: "Case not found" });
+    const role = (currentUser.user_role || "").toLowerCase();
+    const isOwner = Number(record.user_id) === Number(currentUser.user_id);
+    const isAdmin = role === "admin";
+    if (!isAdmin && !isOwner) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const updated = await caseServices.updateCaseAllowedViewers(
+      caseId,
+      allowed_viewers,
+      updated_by ?? currentUser.user_id ?? null
+    );
+    res.status(200).json(updated);
+  } catch (err) {
+    console.error("Error sharing case access", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
