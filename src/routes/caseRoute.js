@@ -30,7 +30,7 @@ router.get(
   "/cases/count/archived/user/:user_id",
   verifyUser,
   caseController.countArchivedCasesByUserId
-); // Count archived cases of a specific lawyer
+); // Count archived cases of a specific lawyer or viewer
 
 router.post("/cases", caseController.createCase);
 router.put("/cases/:case_id", caseController.updateCase);
