@@ -51,7 +51,7 @@ export const getDocumentsBySubmitter = async (userId) => {
   return rows;
 };
 
-// Get all task documents assigned to a specific user
+// Get all task documents assigned to (staff/paralegal) or tasked by (admin/lawyer) a specific user
 export const getTaskDocumentsByUser = async (userId) => {
   const { rows } = await query(
     "SELECT * FROM document_tbl WHERE doc_type = 'Task' AND (doc_tasked_to = $1 OR doc_tasked_by = $1) ORDER BY doc_id DESC",
@@ -234,7 +234,17 @@ export const countProcessingDocuments = async () => {
 // count of pending task documents where the doc_status is "todo"
 export const countPendingTaskDocuments = async () => {
   const { rows } = await query(
-    `SELECT COUNT(*) FROM document_tbl WHERE doc_type = 'Task' AND doc_status = 'todo'`
+    `SELECT COUNT(*) FROM document_tbl WHERE doc_type = 'Task' AND doc_status != 'approved'`
+  );
+  return rows[0].count;
+};
+
+// count pending task documents assigned to a paralegal or staff
+export const countUserPendingTaskDocuments = async (userId) => {
+  const { rows } = await query(
+    `SELECT COUNT(*) FROM document_tbl
+      WHERE doc_type = 'Task' AND (doc_tasked_to = $1 OR doc_tasked_by = $1) AND doc_status != 'approved'`,
+    [userId]
   );
   return rows[0].count;
 };

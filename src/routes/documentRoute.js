@@ -52,7 +52,11 @@ const uploadFields = upload.fields([
 ]);
 
 router.get("/documents", documentController.getDocuments);
-router.get("/documents/lawyer/:lawyerId", verifyUser, documentController.getDocumentsByLawyer);
+router.get(
+  "/documents/lawyer/:lawyerId",
+  verifyUser,
+  documentController.getDocumentsByLawyer
+);
 router.get("/documents/:id", verifyUser, documentController.getDocumentById);
 router.get(
   "/case/documents/:caseId",
@@ -63,7 +67,7 @@ router.get(
   "/documents/submitter/:userId",
   verifyUser,
   documentController.getDocumentsBySubmitter
-);  
+);
 router.get(
   "/documents/task/user/:userId",
   verifyUser,
@@ -102,6 +106,11 @@ router.get(
   "/documents/count/pending-tasks",
   verifyUser,
   documentController.countPendingTaskDocuments
+);
+router.get(
+  "/documents/count/pending-tasks/:userId",
+  verifyUser,
+  documentController.countUserPendingTaskDocuments
 );
 
 export default router;

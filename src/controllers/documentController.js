@@ -176,6 +176,19 @@ export const countPendingTaskDocuments = async (req, res) => {
   }
 }
 
+// count pending task documents assigned to a paralegal or staff
+export const countUserPendingTaskDocuments = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const count = await documentService.countUserPendingTaskDocuments(userId);
+    res.status(200).json({ count });
+  }
+  catch (err) {
+    console.error("Error counting user pending task documents:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 
 
 
