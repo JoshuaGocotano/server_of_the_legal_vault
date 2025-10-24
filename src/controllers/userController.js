@@ -149,25 +149,29 @@ export const updateUserRole = async (req, res) => {
   try {
     const targetUserId = req.params.user_id;
     const { user_role } = req.body;
-    if (!user_role) return res.status(400).json({ message: "user_role is required" });
+    if (!user_role)
+      return res.status(400).json({ message: "user_role is required" });
 
-    const requesterRole = (req.user?.user_role || "").toLowerCase();
-    const desired = (user_role || "").toLowerCase();
+    const requesterRole = req.user?.user_role || "";
+    const desired = user_role || "";
 
     // Admin can always change roles
-    if (requesterRole !== "admin") {
+    if (requesterRole !== "Admin") {
       // Lawyer can only promote to Admin if there is no current Admin
-      if (requesterRole === "lawyer") {
+      if (requesterRole === "Lawyer") {
         const adminCount = await userService.countAdmins();
-        if (!(desired === "admin" && adminCount === 0)) {
-          return res.status(403).json({ message: "Only when no Admin exists can a Lawyer assign the first Admin." });
+        if (!(desired === "Admin" && adminCount === 0)) {
+          return res.status(403).json({
+            message:
+              "Only when no Admin exists can a Lawyer assign the first Admin.",
+          });
         }
       } else {
         return res.status(403).json({ message: "Insufficient permission." });
       }
     }
 
-    const updated = await userService.updateUserRoleOnly(targetUserId, user_role);
+    const updated = await userService.updateUserRoleOnly(targetUserId, desired);
     if (!updated) return res.status(404).json({ message: "User not found" });
 
     res.status(200).json(updated);

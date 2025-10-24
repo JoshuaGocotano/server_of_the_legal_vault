@@ -194,11 +194,22 @@ export const getLawyersByCaseCategoryTypes = async () => {
   return rows;
 };
 
-
 // count how many admins exist
 export const countAdmins = async () => {
   const { rows } = await query(
-    "SELECT COUNT(*) FROM user_tbl WHERE LOWER(user_role) = 'admin'"
+    "SELECT COUNT(*) FROM user_tbl WHERE user_role = 'Admin'"
   );
   return parseInt(rows[0].count, 10);
+};
+
+// updateUserRoleOnly for updating user role
+export const updateUserRoleOnly = async (userId, newRole) => {
+  const { rows } = await query(
+    `UPDATE user_tbl SET
+      user_role = $1
+    WHERE user_id = $2
+    RETURNING *`,
+    [newRole, userId]
+  );
+  return rows[0];
 };
