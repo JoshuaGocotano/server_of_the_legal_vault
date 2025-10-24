@@ -193,3 +193,12 @@ export const getLawyersByCaseCategoryTypes = async () => {
   );
   return rows;
 };
+
+
+// count how many admins exist
+export const countAdmins = async () => {
+  const { rows } = await query(
+    "SELECT COUNT(*) FROM user_tbl WHERE LOWER(user_role) = 'admin'"
+  );
+  return parseInt(rows[0].count, 10);
+};

@@ -73,4 +73,10 @@ router.get(
   userController.getLawyersByCaseCategoryTypes
 );
 
+router.put(
+  "/users/:user_id/role",
+  verifyUser,
+  userController.updateUserRole
+);
+
 export default router;
