@@ -15,12 +15,12 @@ const storage = multer.diskStorage({
     const docType = req.body.doc_type;
     let uploadPath = "D:/Capstone_ni_Angelie/uploads";
 
-    if (docType === "Task") {
-      uploadPath += "/taskedDocs";
+    if (file.fieldname === "doc_reference") {
+      uploadPath += "/referenceDocs";
     } else if (docType === "Support") {
       uploadPath += "/supportingDocs";
-    } else if (file.fieldname === "doc_reference") {
-      uploadPath += "/referenceDocs";
+    } else if (docType === "Task") {
+      uploadPath += "/taskedDocs";
     }
 
     cb(null, uploadPath);
