@@ -103,7 +103,22 @@ export const createDocument = async (req, res) => {
 export const updateDocument = async (req, res) => {
   const { id } = req.params;
   try {
-    const updatedDoc = await documentService.updateDocument(id, req.body);
+    let body = { ...req.body };
+
+    const mainFile = req.files["doc_file"] ? req.files["doc_file"][0].filename : null;
+    const references = req.files["doc_reference"] 
+      ? req.files["doc_reference"].map(f => f.filename) 
+      : [];
+
+    if (mainFile) {
+      body.doc_file = `/uploads/${req.body.doc_type === "Tasked" ? "taskedDocs" : "supportingDocs"}/${mainFile}`;
+    }
+    if (references.length) {
+      body.doc_reference = JSON.stringify(references.map(f => `/uploads/referenceDocs/${f}`));
+    }
+    
+    const updatedDoc = await documentService.updateDocument(id, body);
+
     if (!updatedDoc) {
       return res.status(404).json({ message: "Document not found" });
     }
