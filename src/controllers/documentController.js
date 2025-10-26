@@ -97,7 +97,6 @@ export const createDocument = async (req, res) => {
         : null,
     };
 
-    // Call your service/DB insert
     const newDoc = await documentService.createDocument(docData);
 
     res.status(201).json(newDoc);
