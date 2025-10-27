@@ -81,7 +81,12 @@ router.post(
   documentController.createDocument
 );
 
-router.put("/documents/:id", verifyUser, documentController.updateDocument);
+router.put("/documents/:id", verifyUser, uploadFields, documentController.updateDocument);
+router.put(
+  "/documents/:id/remove-reference",
+  verifyUser,
+  documentController.removeReference
+); // remove a specific doc_reference file
 
 router.delete("/documents/:id", verifyUser, documentController.deleteDocument);
 

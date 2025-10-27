@@ -161,7 +161,7 @@ export const updateDocument = async (docId, docData) => {
       doc_tasked_to = COALESCE($11, doc_tasked_to),
       doc_tasked_by = COALESCE($12, doc_tasked_by),
       doc_submitted_by = COALESCE($13, doc_submitted_by),
-      doc_reference = COALESCE($14, doc_reference),
+      doc_reference = COALESCE($14::jsonb, doc_reference),
       doc_last_updated_by = COALESCE($15, doc_last_updated_by),
       case_id = COALESCE($16, case_id)
     WHERE doc_id = $17
@@ -247,4 +247,20 @@ export const countUserPendingTaskDocuments = async (userId) => {
     [userId]
   );
   return rows[0].count;
+};
+
+// Remove a specific reference path from doc_reference JSONB array
+export const removeReferenceFromDocument = async (docId, referencePath) => {
+  const sql = `
+    UPDATE document_tbl
+    SET doc_reference = COALESCE((
+      SELECT jsonb_agg(value)
+      FROM jsonb_array_elements(doc_reference)
+      WHERE value::text <> to_jsonb($1::text)::text
+    ), '[]'::jsonb)
+    WHERE doc_id = $2
+    RETURNING *;
+  `;
+  const { rows } = await query(sql, [referencePath, docId]);
+  return rows[0];
 };

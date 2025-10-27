@@ -119,15 +119,50 @@ export const updateDocument = async (req, res) => {
 
     if (mainFile) {
       body.doc_file = `/uploads/${
-        req.body.doc_type === "Tasked" ? "taskedDocs" : "supportingDocs"
+        req.body.doc_type === "Task" ? "taskedDocs" : "supportingDocs"
       }/${mainFile}`;
     }
 
-    if (references.length) {
-      body.doc_reference = JSON.stringify(
-        references.map((f) => `/uploads/referenceDocs/${f}`)
+    if (files["doc_reference"] || req.body.doc_reference) {
+      let existing = [];
+
+      const rawRef = req.body.doc_reference;
+
+      if (Array.isArray(rawRef)) {
+        for (const ref of rawRef) {
+          if (typeof ref === "string" && ref.trim().startsWith("[")) {
+            try {
+              const parsed = JSON.parse(ref);
+              if (Array.isArray(parsed)) existing.push(...parsed);
+            } catch (e) {
+              console.warn("Invalid JSON string in doc_reference array:", ref);
+            }
+          } else if (typeof ref === "string" && ref.trim() !== "") {
+            existing.push(ref);
+          }
+        }
+      } else if (typeof rawRef === "string" && rawRef.trim()) {
+        try {
+          const parsed = JSON.parse(rawRef);
+          existing = Array.isArray(parsed) ? parsed : [rawRef];
+        } catch {
+          existing = [rawRef];
+        }
+      }
+
+      // Add new uploaded references
+      const newRefs = (files["doc_reference"] || []).map(
+        (f) => `/uploads/referenceDocs/${f.filename}`
       );
+
+      // Merge and deduplicate
+      const allRefs = [...new Set([...existing, ...newRefs])];
+
+      // Final JSON string to send to service
+      body.doc_reference = allRefs.length ? JSON.stringify(allRefs) : null;
     }
+
+    console.log("➡ Final body.doc_reference:", body.doc_reference);
 
     const updatedDoc = await documentService.updateDocument(id, body);
 
@@ -211,5 +246,31 @@ export const countUserPendingTaskDocuments = async (req, res) => {
   } catch (err) {
     console.error("Error counting user pending task documents:", err);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// remove a document reference from a document
+
+export const removeReference = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { referencePath } = req.body;
+
+    if (!referencePath) {
+      return res.status(400).json({ error: "doc_reference path is required" });
+    }
+
+    const updatedDoc = await documentService.removeReferenceFromDocument(
+      id,
+      referencePath
+    );
+    if (!updatedDoc) {
+      return res.status(404).json({ error: "Document not found" });
+    }
+
+    res.json(updatedDoc);
+  } catch (err) {
+    console.error("Error removing reference:", err);
+    res.status(500).json({ error: "Failed to remove reference" });
   }
 };
