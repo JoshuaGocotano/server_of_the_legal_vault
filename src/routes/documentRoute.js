@@ -108,6 +108,11 @@ router.get(
   documentController.countProcessingDocuments
 );
 router.get(
+  "/documents/count/processing/lawyer",
+  verifyUser,
+  documentController.countProcessingDocumentsByLawyer
+); // for a specific lawyer
+router.get(
   "/documents/count/pending-tasks",
   verifyUser,
   documentController.countPendingTaskDocuments

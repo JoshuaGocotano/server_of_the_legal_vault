@@ -224,6 +224,20 @@ export const countProcessingDocuments = async (req, res) => {
   }
 };
 
+// Count processing documents of a specific lawyer
+export const countProcessingDocumentsByLawyer = async (req, res) => {
+  const lawyerId = req.user.user_id;
+  try {
+    const count = await documentService.countProcessingDocumentsByLawyer(
+      lawyerId
+    );
+    res.status(200).json({ count });
+  } catch (err) {
+    console.error("Error counting processing documents for lawyer:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // count of pending task documents where the doc_status is "todo"
 export const countPendingTaskDocuments = async (req, res) => {
   try {

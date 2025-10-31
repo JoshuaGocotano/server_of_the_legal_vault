@@ -29,3 +29,15 @@ export const getCaseCounts = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// Get case counts by type
+export const getCaseCountsByCategory = async (req, res) => {
+  try {
+    const counts = await reportService.getCaseCountsByCategory();
+    res.status(200).json(counts);
+  } catch (err) {
+    console.error("Error fetching case counts:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+

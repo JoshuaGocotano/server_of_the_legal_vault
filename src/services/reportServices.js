@@ -126,8 +126,55 @@ export const getCaseCounts = async () => {
   for (const row of rows) {
     if (row.category === "completed") counts.completed = Number(row.count);
     else if (row.category === "dismissed") counts.dismissed = Number(row.count);
-    else if (row.category === "archived_completed") counts.archivedCompleted = Number(row.count);
-    else if (row.category === "archived_dismissed") counts.archivedDismissed = Number(row.count);
+    else if (row.category === "archived_completed")
+      counts.archivedCompleted = Number(row.count);
+    else if (row.category === "archived_dismissed")
+      counts.archivedDismissed = Number(row.count);
+  }
+
+  return counts;
+};
+
+export const getCaseCountsByCategory = async () => {
+  const sql = `
+    SELECT 
+      TRIM(cct.cc_name) AS raw_name,
+      COUNT(*) AS count
+    FROM case_tbl ct
+    INNER JOIN case_category_tbl cct ON ct.cc_id = cct.cc_id
+    WHERE ct.case_status NOT IN ('Draft', 'Deleted')
+    GROUP BY cct.cc_name
+    ORDER BY cct.cc_name ASC;
+  `;
+
+  const { rows } = await query(sql);
+
+  const counts = {
+    civil: 0,
+    criminal: 0,
+    special_proceedings: 0,
+    constitutional: 0,
+    jurisdictional: 0,
+    special_courts: 0,
+  };
+
+  // Normalize case category names to match object keys
+  const normalizeName = (name) => {
+    if (!name) return "";
+    return name
+      .toLowerCase()
+      .replace(/case/gi, "") // remove "case"
+      .replace(/\s+$/g, "") // remove trailing spaces
+      .replace(/^\s+/g, "") // remove leading spaces
+      .replace(/\s+/g, "_") // replace inner spaces with underscores
+      .trim();
+  };
+
+  for (const row of rows) {
+    const key = normalizeName(row.raw_name);
+    if (counts.hasOwnProperty(key)) {
+      counts[key] = Number(row.count);
+    }
   }
 
   return counts;

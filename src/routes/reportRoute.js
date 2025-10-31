@@ -20,5 +20,7 @@ router.get(
 
 // Case counts
 router.get("/reports/case-counts", verifyUser, reportController.getCaseCounts);
+// Case counts by category
+router.get("/reports/case-counts-by-category", verifyUser, reportController.getCaseCountsByCategory);
 
 export default router;

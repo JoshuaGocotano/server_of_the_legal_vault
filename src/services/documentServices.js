@@ -231,6 +231,17 @@ export const countProcessingDocuments = async () => {
   return rows[0].count;
 };
 
+// count processing documents of a lawyer's cases
+export const countProcessingDocumentsByLawyer = async (lawyerId) => {
+  const { rows } = await query(
+    `SELECT COUNT(*) FROM document_tbl d
+      JOIN case_tbl c ON d.case_id = c.case_id
+      WHERE c.case_status = 'Processing' AND c.user_id = $1`,
+    [lawyerId]
+  );
+  return rows[0].count;
+};
+
 // count of pending task documents where the doc_status is "todo"
 export const countPendingTaskDocuments = async () => {
   const { rows } = await query(
