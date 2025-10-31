@@ -162,8 +162,6 @@ export const updateDocument = async (req, res) => {
       body.doc_reference = allRefs.length ? JSON.stringify(allRefs) : null;
     }
 
-    console.log("➡ Final body.doc_reference:", body.doc_reference);
-
     const updatedDoc = await documentService.updateDocument(id, body);
 
     if (!updatedDoc) {

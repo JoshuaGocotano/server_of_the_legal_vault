@@ -10,6 +10,7 @@ import caseRoutes from "./routes/caseRoute.js";
 import paymentRoutes from "./routes/paymentRoute.js";
 import documentRoutes from "./routes/documentRoute.js";
 import notificationRoutes from "./routes/notificationRoute.js";
+import reportRoutes from "./routes/reportRoute.js";
 
 import requireAdminOrLawyer from "./middleware/requireAdminOrLawyer.js";
 import verifyUser from "./middleware/verifyUser.js";
@@ -36,6 +37,7 @@ app.use("/api", caseRoutes);
 app.use("/api", paymentRoutes);
 app.use("/api", documentRoutes);
 app.use("/api", notificationRoutes);
+app.use("/api", reportRoutes);
 
 // IMPORTANT: mount restricted subpaths BEFORE the generic /uploads static, otherwise
 // the generic static will serve files and bypass the role middleware.
