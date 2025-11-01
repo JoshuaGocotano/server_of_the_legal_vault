@@ -53,10 +53,20 @@ export const getDocumentsBySubmitter = async (userId) => {
 
 // Get all task documents assigned to (staff/paralegal) or tasked by (admin/lawyer) a specific user
 export const getTaskDocumentsByUser = async (userId) => {
-  const { rows } = await query(
-    "SELECT * FROM document_tbl WHERE doc_type = 'Task' AND (doc_tasked_to = $1 OR doc_tasked_by = $1) ORDER BY doc_id DESC",
-    [userId]
-  );
+  const sql = `
+    SELECT DISTINCT d.*, c.case_id, c.case_status, c.user_id AS case_user_id
+    FROM document_tbl d
+    LEFT JOIN case_tbl c ON d.case_id = c.case_id
+    WHERE d.doc_type = 'Task'
+      AND (
+        d.doc_tasked_to = $1
+        OR d.doc_tasked_by = $1
+        OR c.user_id = $1
+      )
+    ORDER BY d.doc_id DESC;
+  `;
+
+  const { rows } = await query(sql, [userId]);
   return rows;
 };
 
@@ -242,7 +252,7 @@ export const countProcessingDocumentsByLawyer = async (lawyerId) => {
   return rows[0].count;
 };
 
-// count of pending task documents where the doc_status is "todo"
+// count of pending task documents where the doc_status is not "approved"
 export const countPendingTaskDocuments = async () => {
   const { rows } = await query(
     `SELECT COUNT(*) FROM document_tbl WHERE doc_type = 'Task' AND doc_status != 'approved'`
@@ -250,14 +260,25 @@ export const countPendingTaskDocuments = async () => {
   return rows[0].count;
 };
 
-// count pending task documents assigned to a paralegal or staff
+// count pending task documents assigned to a paralegal or staff (for staff/paralegal/lawyer dashboard)
 export const countUserPendingTaskDocuments = async (userId) => {
-  const { rows } = await query(
-    `SELECT COUNT(*) FROM document_tbl
-      WHERE doc_type = 'Task' AND (doc_tasked_to = $1 OR doc_tasked_by = $1) AND doc_status != 'approved'`,
-    [userId]
-  );
-  return rows[0].count;
+  const sql = `
+    SELECT COUNT(DISTINCT d.doc_id) AS count
+    FROM document_tbl d
+    LEFT JOIN case_tbl c ON d.case_id = c.case_id
+    WHERE 
+      d.doc_type = 'Task'
+      AND (
+        d.doc_tasked_to = $1         -- tasks assigned to the user
+        OR d.doc_tasked_by = $1      -- tasks created by the user
+        OR c.user_id = $1            -- tasks belonging to lawyer's cases
+      )
+      AND (d.doc_status IS NULL OR LOWER(d.doc_status) NOT IN ('approved', 'completed'))
+      AND (c.case_status NOT IN ('Archived (Completed)', 'Archived (Dismissed)', 'Deleted') OR c.case_status IS NULL)
+  `;
+
+  const { rows } = await query(sql, [userId]);
+  return Number(rows[0].count) || 0;
 };
 
 // Remove a specific reference path from doc_reference JSONB array

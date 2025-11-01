@@ -116,7 +116,7 @@ router.get(
   "/documents/count/pending-tasks",
   verifyUser,
   documentController.countPendingTaskDocuments
-);
+); // for admin dashboard
 router.get(
   "/documents/count/pending-tasks/:userId",
   verifyUser,
