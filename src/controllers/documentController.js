@@ -115,7 +115,6 @@ export const updateDocument = async (req, res) => {
     const files = req.files || {}; // safely handle undefined
 
     const mainFile = files["doc_file"]?.[0]?.filename || null;
-    const references = files["doc_reference"]?.map((f) => f.filename) || [];
 
     if (mainFile) {
       body.doc_file = `/uploads/${
