@@ -157,26 +157,26 @@ export const updateCase = async (req, res) => {
 
     const updatedCase = await caseServices.updateCase(caseId, caseData);
 
-    // const user = await caseServices.getUserById(updatedCase.user_id);
-    // const updatedBy = await caseServices.getUserById(caseData.last_updated_by); // the one who updated the case
-    // const cc_name = await caseServices.getCaseCategoryNameById(
-    //   updatedCase.cc_id
-    // );
-    // const ct_name = await caseServices.getCaseTypeNameById(updatedCase.ct_id);
-    // const client_name = await caseServices.getClientNameById(
-    //   caseData.client_id
-    // );
-    // const client_email = await caseServices.getClientEmailById(
-    //   caseData.client_id
-    // );
-    // const admins = await caseServices.getAdmins();
+    const user = await caseServices.getUserById(updatedCase.user_id);
+    const updatedBy = await caseServices.getUserById(caseData.last_updated_by); // the one who updated the case
+    const cc_name = await caseServices.getCaseCategoryNameById(
+      updatedCase.cc_id
+    );
+    const ct_name = await caseServices.getCaseTypeNameById(updatedCase.ct_id);
+    const client_name = await caseServices.getClientNameById(
+      caseData.client_id
+    );
+    const client_email = await caseServices.getClientEmailById(
+      caseData.client_id
+    );
+    const admins = await caseServices.getAdmins();
 
-    // let lawyer_text = "No lawyer assigned yet";
-    // if (user) {
-    //   lawyer_text = `Lawyer: ${user.user_fname} ${
-    //     user.user_mname ? user.user_mname : ""
-    //   } ${user.user_lname}`;
-    // }
+    let lawyer_text = "No lawyer assigned yet";
+    if (user) {
+      lawyer_text = `Lawyer: ${user.user_fname} ${
+        user.user_mname ? user.user_mname : ""
+      } ${user.user_lname}`;
+    }
 
     // // notifying all super lawyers or admins
     // admins.forEach((admin) => {
@@ -207,7 +207,7 @@ export const updateCase = async (req, res) => {
     // sendCaseUpdateNotification(
     //   client_email,
     //   "Case Successfully Updated in the BOS' Legal Vault",
-    //   `Hello ${client_name},\n\nYour ${cc_name}: ${ct_name} has been successfully updated in our system. Please contact your lawyer for more details.`
+    //   `Hello ${client_name},\n\nYour ${cc_name}: ${ct_name} has been successfully updated in our system.\n\nTag: ${updatedCase.case_tag}\nRemarks: ${updatedCase.case_remarks} \n\nPlease contact your lawyer for more details.`
     // );
 
     if (!updatedCase) {
