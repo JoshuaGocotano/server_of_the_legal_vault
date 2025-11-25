@@ -53,13 +53,36 @@ export const getPaymentsByLawyerId = async (lawyer_id) => {
 
 // Adding a New Payment
 export const addPayment = async (paymentData) => {
-  const { case_id, user_id, payment_amount, payment_type } = paymentData;
-  const { rows } = await query(
-    `INSERT INTO payment_tbl (case_id, user_id, payment_amount, payment_type)
-        VALUES ($1, $2, $3, $4) RETURNING *`,
-    [case_id, user_id, payment_amount, payment_type]
-  );
-  return rows[0];
+  const {
+    case_id,
+    user_id,
+    payment_amount,
+    payment_type,
+    cheque_name,
+    cheque_number,
+  } = paymentData;
+
+  // If payment type is Cheque, include cheque fields
+  if (payment_type === "Cheque") {
+    // Use cheque_name/cheque_number first, fallback to check_name/check_number for compatibility
+    const chequeName = cheque_name;
+    const chequeNumber = cheque_number;
+
+    const { rows } = await query(
+      `INSERT INTO payment_tbl (case_id, user_id, payment_amount, payment_type, cheque_name, cheque_number)
+          VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [case_id, user_id, payment_amount, payment_type, chequeName, chequeNumber]
+    );
+    return rows[0];
+  } else {
+    // For Cash payments, don't include cheque fields
+    const { rows } = await query(
+      `INSERT INTO payment_tbl (case_id, user_id, payment_amount, payment_type)
+          VALUES ($1, $2, $3, $4) RETURNING *`,
+      [case_id, user_id, payment_amount, payment_type]
+    );
+    return rows[0];
+  }
 };
 
 // Deleting a Payment by payment_id
