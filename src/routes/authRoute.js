@@ -43,7 +43,7 @@ router.post("/login", async (req, res) => {
         [otp, otpExpiry, user.user_id]
       );
 
-      // await sendVerificationCode(user.user_email, otp);
+      // await sendVerificationCode(user.user_email, otp);      // Send OTP via email
 
       res.json({
         message: "OTP sent to your email",
@@ -80,6 +80,7 @@ router.post("/login", async (req, res) => {
       //     user.user_profile,
       //   ]
       // );
+
       delete user.user_password;
       res.json({ user });
     }

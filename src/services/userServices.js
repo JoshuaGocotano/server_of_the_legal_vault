@@ -75,6 +75,7 @@ export const updateUser = async (userId, userData) => {
     user_status,
     user_profile,
     branch_id,
+    user_last_updated_by,
   } = userData;
 
   let hashedPassword = null;
@@ -108,7 +109,8 @@ export const updateUser = async (userId, userData) => {
       user_status = $8,
       user_profile = $9,
       branch_id = $10
-    WHERE user_id = $11
+      user_last_updated_by = $11
+    WHERE user_id = $12
     RETURNING *`,
     [
       user_email,
@@ -121,6 +123,7 @@ export const updateUser = async (userId, userData) => {
       user_status,
       user_profile,
       branch_id,
+      user_last_updated_by,
       userId,
     ]
   );
