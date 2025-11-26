@@ -108,7 +108,7 @@ export const updateUser = async (userId, userData) => {
       user_role = $7,
       user_status = $8,
       user_profile = $9,
-      branch_id = $10
+      branch_id = $10,
       user_last_updated_by = $11
     WHERE user_id = $12
     RETURNING *`,
