@@ -81,11 +81,12 @@ export const createCase = async (caseData) => {
     cc_id,
     ct_id,
     assigned_by,
+    case_tag_list,
   } = caseData;
 
   const queryStr = `
-    INSERT INTO case_tbl (case_status, case_fee, case_balance, case_remarks, case_cabinet, case_drawer, user_id, client_id, cc_id, ct_id, assigned_by)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    INSERT INTO case_tbl (case_status, case_fee, case_balance, case_remarks, case_cabinet, case_drawer, user_id, client_id, cc_id, ct_id, assigned_by, case_tag_list, case_tag)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     RETURNING *;
   `;
 
@@ -101,6 +102,8 @@ export const createCase = async (caseData) => {
     cc_id,
     ct_id,
     assigned_by,
+    case_tag_list,
+    { id: 1, name: "Case Intake" }, // default tag or starting stage of a case
   ]);
 
   return rows[0];
