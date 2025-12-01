@@ -82,6 +82,7 @@ export const createCase = async (caseData) => {
     ct_id,
     assigned_by,
     case_tag_list,
+    case_tag,
   } = caseData;
 
   const queryStr = `
@@ -103,7 +104,7 @@ export const createCase = async (caseData) => {
     ct_id,
     assigned_by,
     case_tag_list,
-    { id: 1, name: "Case Intake" }, // default tag or starting stage of a case
+    case_tag,
   ]);
 
   return rows[0];
