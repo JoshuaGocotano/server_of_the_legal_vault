@@ -237,7 +237,7 @@ export const createCaseCategory = async (cc_name) => {
   return rows[0];
 };
 
-export const createCaseType = async (ct_name, cc_id = null) => {
+export const createCaseType = async (ct_name, ct_fee, cc_id = null) => {
   const existing = await findCaseTypeByName(ct_name);
   if (existing) {
     const err = new Error("Type already exists");
@@ -245,8 +245,8 @@ export const createCaseType = async (ct_name, cc_id = null) => {
     throw err;
   }
   const { rows } = await query(
-    `INSERT INTO cc_type_tbl (ct_name, cc_id) VALUES ($1, $2) RETURNING *;`,
-    [ct_name, cc_id]
+    `INSERT INTO cc_type_tbl (ct_name, ct_fee, cc_id) VALUES ($1, $2, $3) RETURNING *;`,
+    [ct_name, ct_fee, cc_id]
   );
   return rows[0];
 };

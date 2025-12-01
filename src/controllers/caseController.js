@@ -289,15 +289,36 @@ export const createCaseCategory = async (req, res) => {
 
 export const createCaseType = async (req, res) => {
   try {
-    const { ct_name, cc_id } = req.body;
+    const { ct_name, ct_fee, cc_id } = req.body;
+
     if (!ct_name || !ct_name.trim()) {
       return res.status(400).json({ message: "Type name is required" });
     }
+
+    // Expect ct_fee as numbers from frontend
+    if (!ct_fee || typeof ct_fee !== "object" || ct_fee.min == null || ct_fee.max == null) {
+      return res.status(400).json({ message: "Fee range is required" });
+    }
+
+    const minFee = Number(ct_fee.min);
+    const maxFee = Number(ct_fee.max);
+
+    if (isNaN(minFee) || isNaN(maxFee)) {
+      return res.status(400).json({ message: "Fee values must be numbers" });
+    }
+
+    // Format fee string for storage
+    const formattedFee = `₱${minFee.toLocaleString("en-US")} - ₱${maxFee.toLocaleString("en-US")}`;
+
+    // Save to DB as VARCHAR
     const created = await caseServices.createCaseType(
       ct_name.trim(),
+      formattedFee,
       cc_id ?? null
     );
+
     res.status(201).json(created);
+
   } catch (err) {
     if (err.code === "ALREADY_EXISTS") {
       return res.status(409).json({ message: "Type already exists" });
