@@ -121,6 +121,6 @@ router.get(
   "/documents/count/pending-tasks/:userId",
   verifyUser,
   documentController.countUserPendingTaskDocuments
-);
+); // for paralegal/staff/lawyer dashboard
 
 export default router;
