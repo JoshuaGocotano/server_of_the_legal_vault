@@ -62,6 +62,7 @@ export const getTaskDocumentsByUser = async (userId) => {
         d.doc_tasked_to = $1
         OR d.doc_tasked_by = $1
         OR c.user_id = $1
+        OR c.case_status != 'Dismissed'
       )
     ORDER BY d.doc_id DESC;
   `;
