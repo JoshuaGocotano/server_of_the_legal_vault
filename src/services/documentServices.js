@@ -147,6 +147,7 @@ export const updateDocument = async (docId, docData) => {
     doc_file,
     doc_prio_level,
     doc_due_date,
+    doc_date_submitted,
     doc_status,
     doc_tag,
     doc_password,
@@ -173,19 +174,20 @@ export const updateDocument = async (docId, docData) => {
       doc_file = COALESCE($5, doc_file),
       doc_prio_level = COALESCE($6, doc_prio_level),
       doc_due_date = COALESCE($7, doc_due_date),
-      doc_status = COALESCE($8, doc_status),
-      doc_tag = COALESCE($9, doc_tag),
-      doc_password = COALESCE($10, doc_password),
-      doc_tasked_to = COALESCE($11, doc_tasked_to),
-      doc_tasked_by = COALESCE($12, doc_tasked_by),
-      doc_submitted_by = COALESCE($13, doc_submitted_by),
-      doc_reference = COALESCE($14::jsonb, doc_reference),
-      doc_last_updated_by = COALESCE($15, doc_last_updated_by),
-      doc_trashed_by = COALESCE($16, doc_trashed_by),
-      doc_trashed_date = COALESCE($17, doc_trashed_date),
-      is_trashed = COALESCE($18, is_trashed),
-      case_id = COALESCE($19, case_id)
-    WHERE doc_id = $20
+      doc_date_submitted = COALESCE($8, doc_date_submitted),
+      doc_status = COALESCE($9, doc_status),
+      doc_tag = COALESCE($10, doc_tag),
+      doc_password = COALESCE($11, doc_password),
+      doc_tasked_to = COALESCE($12, doc_tasked_to),
+      doc_tasked_by = COALESCE($13, doc_tasked_by),
+      doc_submitted_by = COALESCE($14, doc_submitted_by),
+      doc_reference = COALESCE($15::jsonb, doc_reference),
+      doc_last_updated_by = COALESCE($16, doc_last_updated_by),
+      doc_trashed_by = COALESCE($17, doc_trashed_by),
+      doc_trashed_date = COALESCE($18, doc_trashed_date),
+      is_trashed = COALESCE($19, is_trashed),
+      case_id = COALESCE($20, case_id)
+    WHERE doc_id = $21
     RETURNING *;
   `;
 
@@ -197,6 +199,7 @@ export const updateDocument = async (docId, docData) => {
     doc_file,
     doc_prio_level,
     doc_due_date,
+    doc_date_submitted,
     doc_status,
     doc_tag,
     hashedPassword,
