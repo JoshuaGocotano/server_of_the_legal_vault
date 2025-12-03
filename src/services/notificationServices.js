@@ -29,14 +29,22 @@ export const getUnreadCountByUserId = async (user_id) => {
   return rows[0].count;
 };
 
-// Mark a notification as read
-export const markNotificationAsRead = async (notification_id) => {
-  await query(
-    `
-    UPDATE notification_tbl
-    SET is_read = true
-    WHERE notification_id = $1
-    `,
+// Mark a notification as read or unread depending on the request body
+export const markNotificationAsReadOrUnread = async (notification_id) => {
+  // check first if the notification is read or unread
+  const { rows } = await query(
+    `SELECT is_read 
+     FROM notification_tbl 
+     WHERE notification_id = $1`,
     [notification_id]
+  );
+  const isRead = rows[0]?.is_read;
+  const newIsRead = !isRead;
+
+  await query(
+    `UPDATE notification_tbl 
+     SET is_read = $1
+     WHERE notification_id = $2`,
+    [newIsRead, notification_id]
   );
 };

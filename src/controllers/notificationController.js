@@ -27,10 +27,10 @@ export const getUnreadCountByUserId = async (req, res) => {
 };
 
 // Mark a Notification as Read
-export const markNotificationAsRead = async (req, res) => {
+export const markNotificationAsReadOrUnread = async (req, res) => {
   try {
     const { notification_id } = req.params;
-    await notificationService.markNotificationAsRead(notification_id);
+    await notificationService.markNotificationAsReadOrUnread(notification_id);
     res.status(200).json({ message: "Notification marked as read" });
   } catch (err) {
     console.error("Error marking notification as read", err);
