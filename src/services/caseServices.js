@@ -125,12 +125,14 @@ export const updateCase = async (caseId, caseData) => {
     ct_id,
     last_updated_by,
     case_verdict,
+    case_tag_list,
+    case_tag,
   } = caseData;
 
   const queryStr = `
     UPDATE case_tbl
-    SET case_last_updated = NOW(), case_status = $1, case_fee = $2, case_balance = $3, case_remarks = $4, case_cabinet = $5, case_drawer = $6, user_id = $7, client_id = $8, cc_id = $9, ct_id = $10, last_updated_by = $11, case_verdict = $12
-    WHERE case_id = $13
+    SET case_last_updated = NOW(), case_status = $1, case_fee = $2, case_balance = $3, case_remarks = $4, case_cabinet = $5, case_drawer = $6, user_id = $7, client_id = $8, cc_id = $9, ct_id = $10, last_updated_by = $11, case_verdict = $12, case_tag_list = $13, case_tag = $14
+    WHERE case_id = $15
     RETURNING *;
   `;
 
@@ -147,6 +149,8 @@ export const updateCase = async (caseId, caseData) => {
     ct_id,
     last_updated_by,
     case_verdict,
+    case_tag_list,
+    case_tag,
     caseId,
   ]);
 
