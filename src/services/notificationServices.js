@@ -8,7 +8,7 @@ export const getNotificationsByUserId = async (user_id) => {
     `
     SELECT *
     FROM notification_tbl
-    WHERE (user_id = $1 OR sender_id = $1)
+    WHERE user_id = $1
       AND is_cleared = false
     ORDER BY date_created DESC
     `,
@@ -17,17 +17,26 @@ export const getNotificationsByUserId = async (user_id) => {
   return rows;
 };
 
-// Get Unread Notification Count of a user
+// Get unread notification count of a user
 export const getUnreadCountByUserId = async (user_id) => {
   const { rows } = await query(
-    `SELECT COUNT(*) FROM notification_tbl 
-     WHERE (user_id = $1 OR sender_id = $1)
-        AND is_read = false`,
+    `SELECT COUNT(*) 
+     FROM notification_tbl 
+     WHERE user_id = $1
+       AND is_read = false`,
     [user_id]
   );
   return rows[0].count;
 };
 
-
-
-
+// Mark a notification as read
+export const markNotificationAsRead = async (notification_id) => {
+  await query(
+    `
+    UPDATE notification_tbl
+    SET is_read = true
+    WHERE notification_id = $1
+    `,
+    [notification_id]
+  );
+};

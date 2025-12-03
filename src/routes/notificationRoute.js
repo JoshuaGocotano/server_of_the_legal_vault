@@ -19,4 +19,11 @@ router.get(
   notificationController.getUnreadCountByUserId
 );
 
+// Mark notification as read
+router.put(
+  "/notifications/mark-read/:notification_id",
+  verifyUser,
+  notificationController.markNotificationAsRead
+);
+
 export default router;
