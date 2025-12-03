@@ -38,3 +38,14 @@ export const markNotificationAsReadOrUnread = async (req, res) => {
   }
 };
 
+// Clear Notifications
+export const clearNotificationsByUserId = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    await notificationService.clearNotificationsByUserId(user_id);
+    res.status(200).json({ message: "Notifications cleared" });
+  } catch (err) {
+    console.error("Error clearing notifications", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

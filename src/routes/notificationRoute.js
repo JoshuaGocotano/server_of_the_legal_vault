@@ -26,4 +26,11 @@ router.put(
   notificationController.markNotificationAsReadOrUnread
 );
 
+// Clear notifications
+router.put(
+  "/notifications/clear/:user_id",
+  verifyUser,
+  notificationController.clearNotificationsByUserId
+);
+
 export default router;

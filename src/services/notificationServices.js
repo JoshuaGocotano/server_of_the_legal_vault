@@ -23,7 +23,7 @@ export const getUnreadCountByUserId = async (user_id) => {
     `SELECT COUNT(*) 
      FROM notification_tbl 
      WHERE user_id = $1
-       AND is_read = false`,
+       AND is_read = false AND is_cleared = false`,
     [user_id]
   );
   return rows[0].count;
@@ -46,5 +46,15 @@ export const markNotificationAsReadOrUnread = async (notification_id) => {
      SET is_read = $1
      WHERE notification_id = $2`,
     [newIsRead, notification_id]
+  );
+};
+
+// clearing notifications => setting is_cleared to true
+export const clearNotificationsByUserId = async (user_id) => {
+  await query(
+    `UPDATE notification_tbl 
+     SET is_cleared = true
+     WHERE user_id = $1`,
+    [user_id]
   );
 };
