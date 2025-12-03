@@ -13,7 +13,6 @@ router.get("/case-tags", verifyUser, caseTagController.getCaseTags);
 router.post(
   "/case-tags",
   verifyUser,
-  requireAdmin,
   caseTagController.createCaseTag
 );
 
