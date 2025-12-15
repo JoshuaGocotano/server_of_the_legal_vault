@@ -177,6 +177,25 @@ export const getUserLogsById = async (userId) => {
   return rows;
 };
 
+// Fetch logs for lawyer + their staff/paralegal task logs
+export const getUserLogsForLawyerParalegalStaff = async (lawyerId) => {
+  const { rows } = await query(
+    `
+    SELECT DISTINCT ul.*
+    FROM user_log_tbl ul
+    LEFT JOIN document_tbl d
+      ON d.doc_tasked_to = ul.user_id
+    WHERE
+      ul.user_id = $1
+      OR d.doc_tasked_by = $1
+    ORDER BY ul.user_log_time DESC
+    `,
+    [lawyerId]
+  );
+
+  return rows;
+};
+
 // ---------- SERVICES or QUERIES FOR LAWYERS' CASE SPECIALTIES
 
 export const getLawyersByCaseCategoryTypes = async () => {

@@ -132,6 +132,18 @@ export const getUserLogsById = async (req, res) => {
   }
 };
 
+// CONTROLLER FOR Fetching logs for lawyer + their staff/paralegal task logs
+export const getUserLogsForLawyerParalegalStaff = async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+    const logs = await userService.getUserLogsForLawyerParalegalStaff(userId);
+    res.status(200).json(logs);
+  } catch (err) {
+    console.error("Error fetching user logs by ID", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // -------------------- CONTROLLER FOR LAWYERS' CASE SPECIALTIES
 
 export const getLawyersByCaseCategoryTypes = async (req, res) => {

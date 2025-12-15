@@ -60,6 +60,8 @@ export const addPayment = async (paymentData) => {
     payment_type,
     cheque_name,
     cheque_number,
+    cheque_branch,
+    cheque_location,
   } = paymentData;
 
   // If payment type is Cheque, include cheque fields
@@ -67,11 +69,22 @@ export const addPayment = async (paymentData) => {
     // Use cheque_name/cheque_number first, fallback to check_name/check_number for compatibility
     const chequeName = cheque_name;
     const chequeNumber = cheque_number;
+    const chequeBranch = cheque_branch;
+    const chequeLocation = cheque_location;
 
     const { rows } = await query(
-      `INSERT INTO payment_tbl (case_id, user_id, payment_amount, payment_type, cheque_name, cheque_number)
-          VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [case_id, user_id, payment_amount, payment_type, chequeName, chequeNumber]
+      `INSERT INTO payment_tbl (case_id, user_id, payment_amount, payment_type, cheque_name, cheque_number, cheque_branch, cheque_location)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      [
+        case_id,
+        user_id,
+        payment_amount,
+        payment_type,
+        chequeName,
+        chequeNumber,
+        chequeBranch,
+        chequeLocation,
+      ]
     );
     return rows[0];
   } else {

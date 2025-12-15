@@ -65,6 +65,7 @@ router.get(
 // Routes for fetching user logs
 router.get("/user-logs", verifyUser, userController.getUserLogs);
 router.get("/user-logs/:user_id", verifyUser, userController.getUserLogsById);
+router.get("/user-logs/lawyer-and-their-tasks/:user_id", verifyUser, userController.getUserLogsForLawyerParalegalStaff);
 
 // Routes for fetching the lawyers' specializations
 router.get(
